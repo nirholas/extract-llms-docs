@@ -7,6 +7,8 @@ import {
   ListToolsRequestSchema,
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
   ErrorCode,
   McpError
 } from '@modelcontextprotocol/sdk/types.js'
@@ -26,6 +28,7 @@ const server = new Server(
     capabilities: {
       tools: {},
       resources: {},
+      prompts: {},
     },
   }
 )
@@ -427,6 +430,116 @@ function normalizeUrl(url: string): string {
     return normalized
   }
 }
+
+// List available prompts
+server.setRequestHandler(ListPromptsRequestSchema, async () => {
+  return {
+    prompts: [
+      {
+        name: 'extract_and_summarize',
+        description: 'Extract documentation from a URL and provide a summary of its contents',
+        arguments: [
+          {
+            name: 'url',
+            description: 'The documentation URL to extract',
+            required: true
+          }
+        ]
+      },
+      {
+        name: 'find_api_reference',
+        description: 'Extract documentation and locate API reference sections',
+        arguments: [
+          {
+            name: 'url',
+            description: 'The documentation URL to extract',
+            required: true
+          },
+          {
+            name: 'topic',
+            description: 'The API topic or endpoint to find',
+            required: false
+          }
+        ]
+      },
+      {
+        name: 'getting_started_guide',
+        description: 'Extract documentation and create a getting started guide',
+        arguments: [
+          {
+            name: 'url',
+            description: 'The documentation URL to extract',
+            required: true
+          }
+        ]
+      }
+    ]
+  }
+})
+
+// Get a specific prompt
+server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+  const { name, arguments: args } = request.params
+  const url = args?.url as string
+
+  switch (name) {
+    case 'extract_and_summarize':
+      return {
+        messages: [
+          {
+            role: 'user',
+            content: {
+              type: 'text',
+              text: `Please extract the documentation from ${url} using the extract_documentation tool, then provide a comprehensive summary of:
+1. What the project/service does
+2. Key features and capabilities
+3. Main sections available in the documentation
+4. Getting started steps if available`
+            }
+          }
+        ]
+      }
+
+    case 'find_api_reference':
+      const topic = args?.topic as string
+      return {
+        messages: [
+          {
+            role: 'user',
+            content: {
+              type: 'text',
+              text: `Please extract the documentation from ${url} using the extract_documentation tool, then:
+1. List all available API endpoints or methods
+2. ${topic ? `Find specific documentation about: ${topic}` : 'Identify the main API categories'}
+3. Provide code examples if available
+4. Note any authentication requirements`
+            }
+          }
+        ]
+      }
+
+    case 'getting_started_guide':
+      return {
+        messages: [
+          {
+            role: 'user',
+            content: {
+              type: 'text',
+              text: `Please extract the documentation from ${url} using the extract_documentation tool, then create a step-by-step getting started guide that includes:
+1. Prerequisites and requirements
+2. Installation steps
+3. Basic configuration
+4. First example or hello world
+5. Next steps and resources`
+            }
+          }
+        ]
+      }
+
+    default:
+      throw new McpError(ErrorCode.InvalidRequest, `Unknown prompt: ${name}`)
+  }
+})
 
 // Start the server
 async function main() {

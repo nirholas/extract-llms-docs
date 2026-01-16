@@ -4,11 +4,13 @@ An MCP (Model Context Protocol) server that extracts documentation from websites
 
 ## Features
 
-- **Extract Documentation**: Fetch and parse llms.txt/llms-full.txt from any compatible website
-- **Structured Output**: Get organized markdown documents split by sections
-- **Agent Guide**: Automatically generates an AGENT-GUIDE.md with usage instructions
-- **Full Documentation**: Consolidated llms-full.md with table of contents
-- **Caching**: Extracted documentation is cached for quick subsequent access
+- Extract Documentation: Fetch and parse llms.txt/llms-full.txt from any compatible website
+- Structured Output: Get organized markdown documents split by sections
+- Agent Guide: Automatically generates an AGENT-GUIDE.md with usage instructions
+- Full Documentation: Consolidated llms-full.md with table of contents
+- Caching: Extracted documentation is cached for quick subsequent access
+- Resources: Access extracted documents as MCP resources
+- Prompts: Pre-built prompts for common documentation tasks
 
 ## Installation
 
@@ -26,8 +28,8 @@ npm install -g @llm-energy/mcp-server
 
 Add to your Claude Desktop configuration file:
 
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+Windows: %APPDATA%\Claude\claude_desktop_config.json
 
 ```json
 {
@@ -107,6 +109,38 @@ Get the AI agent usage guide.
 Input: { "url": "docs.anthropic.com" }
 Output: AGENT-GUIDE.md with instructions for AI assistants
 ```
+
+## Available Prompts
+
+### extract_and_summarize
+
+Extract documentation and get a comprehensive summary.
+
+Arguments:
+- url (required): The documentation URL to extract
+
+### find_api_reference
+
+Extract documentation and locate API reference sections.
+
+Arguments:
+- url (required): The documentation URL to extract
+- topic (optional): Specific API topic to find
+
+### getting_started_guide
+
+Extract documentation and create a getting started guide.
+
+Arguments:
+- url (required): The documentation URL to extract
+
+## Resources
+
+After extraction, documents are available as MCP resources:
+
+- llms-forge://{domain}/full - Full consolidated documentation
+- llms-forge://{domain}/guide - Agent usage guide
+- llms-forge://{domain}/{filename} - Individual document sections
 
 ## Example Workflow
 
