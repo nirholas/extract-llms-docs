@@ -126,7 +126,7 @@ llms-forge/
 
 - Website: https://llm.energy
 - Docs: https://llm.energy/docs
-- GitHub: https://github.com/nirholas/lyra-tool-discovery
+- GitHub: https://github.com/nirholas/extract-llms-docs
 
 ---
 
