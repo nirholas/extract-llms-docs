@@ -154,6 +154,13 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
   
   const urlObj = new URL(normalizedUrl);
   const baseUrl = urlObj.origin;
+  const hostname = urlObj.hostname.replace(/^www\./, '');
+  
+  // Extract root domain for subdomain checks (e.g., defillama.com from api.defillama.com)
+  const domainParts = hostname.split('.');
+  const rootDomain = domainParts.length > 2 
+    ? domainParts.slice(-2).join('.') 
+    : hostname;
   
   const analysis: UrlAnalysis = {
     originalUrl: inputUrl,
@@ -165,19 +172,41 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
     pages: [],
   };
 
-  // 1. Check for llms.txt at common locations (highest priority)
-  const llmsTxtLocations = [
-    `${baseUrl}/llms-full.txt`,
-    `${baseUrl}/llms.txt`,
-    `${baseUrl}/.well-known/llms.txt`,
+  // 1. Check for llms-full.txt first (complete docs), then llms.txt as fallback
+  // Check all subdomains for llms-full.txt first
+  const subdomains = [
+    baseUrl,
+    `https://docs.${rootDomain}`,
+    `https://api-docs.${rootDomain}`,
+    `https://developer.${rootDomain}`,
+    `https://api.${rootDomain}`,
   ];
   
-  for (const url of llmsTxtLocations) {
+  // Priority 1: llms-full.txt (complete documentation)
+  for (const subdomain of subdomains) {
+    const fullUrl = `${subdomain}/llms-full.txt`;
+    if (await urlExists(fullUrl)) {
+      analysis.llmsTxtUrl = fullUrl;
+      analysis.strategy = 'llms-txt';
+      return analysis;
+    }
+  }
+  
+  // Priority 2: llms.txt (summary documentation)
+  for (const subdomain of subdomains) {
+    const url = `${subdomain}/llms.txt`;
     if (await urlExists(url)) {
       analysis.llmsTxtUrl = url;
       analysis.strategy = 'llms-txt';
       return analysis;
     }
+  }
+  
+  // Priority 3: .well-known location
+  if (await urlExists(`${baseUrl}/.well-known/llms.txt`)) {
+    analysis.llmsTxtUrl = `${baseUrl}/.well-known/llms.txt`;
+    analysis.strategy = 'llms-txt';
+    return analysis;
   }
 
   // 2. Check for sitemap.xml
@@ -201,9 +230,10 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
   }
 
   // 3. Check for /docs subdomain or path
-  const hostname = urlObj.hostname.replace(/^www\./, '');
   const docsVariants = [
-    `https://docs.${hostname}`,
+    `https://docs.${rootDomain}`,
+    `https://api-docs.${rootDomain}`,
+    `https://developer.${rootDomain}`,
     `${baseUrl}/docs`,
     `${baseUrl}/documentation`,
     `${baseUrl}/doc`,
