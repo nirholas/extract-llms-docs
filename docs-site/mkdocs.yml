@@ -1,6 +1,7 @@
 site_name: llm.energy
 site_url: https://llm.energy/docs/
 site_description: Extract documentation for AI agents from any site with llms.txt support
+use_directory_urls: false
 site_author: nich
 
 repo_name: nirholas/extract-llms-docs
