@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://llm.energy/</loc>
+         <loc>https://llm.energy/docs/</loc>
          <lastmod>2026-01-16</lastmod>
     </url>
     <url>
-         <loc>https://llm.energy/api-reference/</loc>
+         <loc>https://llm.energy/docs/api-reference/</loc>
          <lastmod>2026-01-16</lastmod>
     </url>
     <url>
-         <loc>https://llm.energy/examples/</loc>
+         <loc>https://llm.energy/docs/examples/</loc>
          <lastmod>2026-01-16</lastmod>
     </url>
     <url>
-         <loc>https://llm.energy/llms-txt-standard/</loc>
+         <loc>https://llm.energy/docs/llms-txt-standard/</loc>
          <lastmod>2026-01-16</lastmod>
     </url>
     <url>
-         <loc>https://llm.energy/overview/</loc>
+         <loc>https://llm.energy/docs/overview/</loc>
          <lastmod>2026-01-16</lastmod>
     </url>
     <url>
-         <loc>https://llm.energy/self-hosting/</loc>
+         <loc>https://llm.energy/docs/self-hosting/</loc>
          <lastmod>2026-01-16</lastmod>
     </url>
     <url>
-         <loc>https://llm.energy/mcp-server/installation/</loc>
+         <loc>https://llm.energy/docs/mcp-server/installation/</loc>
          <lastmod>2026-01-16</lastmod>
     </url>
     <url>
-         <loc>https://llm.energy/mcp-server/tools/</loc>
+         <loc>https://llm.energy/docs/mcp-server/tools/</loc>
          <lastmod>2026-01-16</lastmod>
     </url>
 </urlset>
