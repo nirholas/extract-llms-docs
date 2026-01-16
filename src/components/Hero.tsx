@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation'
 import UrlInput from './UrlInput'
 
 const QUICK_TRY = [
+  { name: 'DeFiLlama', url: 'https://api-docs.defillama.com' },
   { name: 'Axiom', url: 'https://docs.axiom.trade' },
   { name: 'Mintlify', url: 'https://mintlify.com' },
   { name: 'Cursor', url: 'https://cursor.com' },
-  { name: 'Anthropic', url: 'https://docs.anthropic.com' },
 ]
 
 export default function Hero() {

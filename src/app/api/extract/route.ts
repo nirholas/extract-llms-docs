@@ -86,6 +86,14 @@ export async function POST(request: NextRequest) {
     }
     
     const baseUrl = `${urlObj.protocol}//${urlObj.host}`
+    const hostname = urlObj.hostname.replace(/^www\./, '')
+    
+    // Extract root domain for subdomain checks (e.g., defillama.com from api.defillama.com)
+    const domainParts = hostname.split('.')
+    const rootDomain = domainParts.length > 2 
+      ? domainParts.slice(-2).join('.') 
+      : hostname
+    
     const cacheKey = normalizeUrlKey(baseUrl)
 
     // Check cache first
@@ -113,12 +121,18 @@ export async function POST(request: NextRequest) {
     let content: string | null = null
     let sourceUrl: string = ''
     
-    const urlsToTry = [
-      `${baseUrl}/llms-full.txt`,
-      `${baseUrl}/llms.txt`
+    // Build list of subdomains to check
+    const subdomains = [
+      baseUrl,
+      `https://docs.${rootDomain}`,
+      `https://api-docs.${rootDomain}`,
+      `https://developer.${rootDomain}`,
+      `https://api.${rootDomain}`,
     ]
     
-    for (const tryUrl of urlsToTry) {
+    // Priority 1: llms-full.txt on all subdomains
+    for (const subdomain of subdomains) {
+      const tryUrl = `${subdomain}/llms-full.txt`
       try {
         const response = await fetch(tryUrl, {
           headers: {
@@ -133,6 +147,28 @@ export async function POST(request: NextRequest) {
         }
       } catch {
         continue
+      }
+    }
+    
+    // Priority 2: llms.txt on all subdomains
+    if (!content) {
+      for (const subdomain of subdomains) {
+        const tryUrl = `${subdomain}/llms.txt`
+        try {
+          const response = await fetch(tryUrl, {
+            headers: {
+              'User-Agent': 'llms-forge/1.0 (Documentation Extractor)',
+            },
+          })
+          
+          if (response.ok) {
+            content = await response.text()
+            sourceUrl = tryUrl
+            break
+          }
+        } catch {
+          continue
+        }
       }
     }
     

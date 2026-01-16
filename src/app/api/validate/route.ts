@@ -49,6 +49,14 @@ export async function GET(request: NextRequest) {
   }
 
   const baseUrl = `${urlObj.protocol}//${urlObj.host}`
+  const hostname = urlObj.hostname.replace(/^www\./, '')
+  
+  // Extract root domain for subdomain checks (e.g., defillama.com from api.defillama.com)
+  const domainParts = hostname.split('.')
+  const rootDomain = domainParts.length > 2 
+    ? domainParts.slice(-2).join('.') 
+    : hostname
+  
   const cacheKey = normalizeUrlKey(baseUrl)
 
   // Check cache first
@@ -67,11 +75,27 @@ export async function GET(request: NextRequest) {
     })
   }
 
-  // Check for llms-full.txt and llms.txt
-  const urlsToCheck: Array<{ url: string; type: 'full' | 'standard' }> = [
-    { url: `${baseUrl}/llms-full.txt`, type: 'full' },
-    { url: `${baseUrl}/llms.txt`, type: 'standard' },
+  // Build list of subdomains to check
+  const subdomains = [
+    baseUrl,
+    `https://docs.${rootDomain}`,
+    `https://api-docs.${rootDomain}`,
+    `https://developer.${rootDomain}`,
+    `https://api.${rootDomain}`,
   ]
+
+  // Check for llms-full.txt first (complete docs), then llms.txt
+  const urlsToCheck: Array<{ url: string; type: 'full' | 'standard' }> = []
+  
+  // Priority 1: llms-full.txt on all subdomains
+  for (const subdomain of subdomains) {
+    urlsToCheck.push({ url: `${subdomain}/llms-full.txt`, type: 'full' })
+  }
+  
+  // Priority 2: llms.txt on all subdomains
+  for (const subdomain of subdomains) {
+    urlsToCheck.push({ url: `${subdomain}/llms.txt`, type: 'standard' })
+  }
 
   let result: ValidationResult = {
     exists: false,
