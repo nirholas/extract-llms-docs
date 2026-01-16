@@ -63,6 +63,6 @@ llm.energy fetches documentation from websites that support the [llms.txt standa
 
 ## Links
 
-- [GitHub Repository](https://github.com/nirholas/lyra-tool-discovery)
+- [GitHub Repository](https://github.com/nirholas/extract-llms-docs)
 - [MCP Server](mcp-server/installation.md)
 - [API Reference](api-reference.md)

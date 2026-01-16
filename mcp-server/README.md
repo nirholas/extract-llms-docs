@@ -177,8 +177,8 @@ This server works with any website that implements the llms.txt standard:
 
 ```bash
 # Clone the repository
-git clone https://github.com/nirholas/lyra-tool-discovery.git
-cd lyra-tool-discovery/llms-forge/mcp-server
+git clone https://github.com/nirholas/extract-llms-docs.git
+cd extract-llms-docs/mcp-server
 
 # Install dependencies
 npm install

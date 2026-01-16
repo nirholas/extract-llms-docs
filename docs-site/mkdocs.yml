@@ -3,9 +3,9 @@ site_url: https://llm.energy/docs/
 site_description: Extract documentation for AI agents from any site with llms.txt support
 site_author: nich
 
-repo_name: nirholas/lyra-tool-discovery
-repo_url: https://github.com/nirholas/lyra-tool-discovery
-edit_uri: edit/main/llms-forge/docs-site/docs/
+repo_name: nirholas/extract-llms-docs
+repo_url: https://github.com/nirholas/extract-llms-docs
+edit_uri: edit/main/docs-site/docs/
 
 theme:
   name: material
@@ -91,7 +91,7 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/nirholas/lyra-tool-discovery
+      link: https://github.com/nirholas/extract-llms-docs
 
 extra_css:
   - stylesheets/extra.css

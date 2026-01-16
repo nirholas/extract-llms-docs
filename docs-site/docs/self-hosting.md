@@ -14,8 +14,8 @@ Deploy llm.energy on your own infrastructure.
 ## Clone & Install
 
 ```bash
-git clone https://github.com/nirholas/lyra-tool-discovery.git
-cd lyra-tool-discovery/llms-forge
+git clone https://github.com/nirholas/extract-llms-docs.git
+cd extract-llms-docs
 pnpm install
 ```
 
@@ -42,12 +42,11 @@ pnpm start
 
 ## Deploy to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/nirholas/lyra-tool-discovery/tree/main/llms-forge)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/nirholas/extract-llms-docs)
 
 Or via CLI:
 
 ```bash
-cd llms-forge
 vercel --prod
 ```
 
