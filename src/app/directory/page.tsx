@@ -1,17 +1,70 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Loader2, CheckCircle, AlertCircle, X } from 'lucide-react'
+import Link from 'next/link'
+import { 
+  Plus, 
+  Loader2, 
+  CheckCircle, 
+  AlertCircle, 
+  X, 
+  ArrowUpDown,
+  Activity,
+  WifiOff,
+  RefreshCw,
+} from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { SearchBar, CategoryFilter, SiteGrid } from '@/components/directory'
 import { KNOWN_SITES, CATEGORIES, CategoryId, SiteEntry } from '@/data/sites'
 
+type SortOption = 'name-asc' | 'name-desc' | 'category' | 'type'
+
+interface HealthSummary {
+  online: number
+  offline: number
+  checking: number
+  total: number
+}
+
 export default function DirectoryPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all')
   const [showSuggestModal, setShowSuggestModal] = useState(false)
+  const [sortBy, setSortBy] = useState<SortOption>('name-asc')
+  const [healthSummary, setHealthSummary] = useState<HealthSummary>({
+    online: 0,
+    offline: 0,
+    checking: KNOWN_SITES.length,
+    total: KNOWN_SITES.length,
+  })
+  const [isLoadingHealth, setIsLoadingHealth] = useState(false)
+
+  // Fetch health summary on mount
+  useEffect(() => {
+    fetchHealthSummary()
+  }, [])
+
+  const fetchHealthSummary = async () => {
+    setIsLoadingHealth(true)
+    try {
+      const response = await fetch('/api/sites/health')
+      if (response.ok) {
+        const data = await response.json()
+        setHealthSummary({
+          online: data.online,
+          offline: data.offline + data.errors,
+          checking: 0,
+          total: data.totalSites,
+        })
+      }
+    } catch (error) {
+      console.error('Failed to fetch health summary:', error)
+    } finally {
+      setIsLoadingHealth(false)
+    }
+  }
 
   // Calculate category counts
   const categoryCounts = useMemo(() => {
@@ -31,9 +84,9 @@ export default function DirectoryPage() {
     return counts
   }, [])
 
-  // Filter sites based on search and category
+  // Filter and sort sites
   const filteredSites = useMemo(() => {
-    return KNOWN_SITES.filter((site) => {
+    let sites = KNOWN_SITES.filter((site) => {
       const matchesCategory =
         selectedCategory === 'all' || site.category === selectedCategory
       const matchesSearch =
@@ -44,7 +97,29 @@ export default function DirectoryPage() {
 
       return matchesCategory && matchesSearch
     })
-  }, [searchQuery, selectedCategory])
+
+    // Sort sites
+    switch (sortBy) {
+      case 'name-asc':
+        sites = [...sites].sort((a, b) => a.name.localeCompare(b.name))
+        break
+      case 'name-desc':
+        sites = [...sites].sort((a, b) => b.name.localeCompare(a.name))
+        break
+      case 'category':
+        sites = [...sites].sort((a, b) => a.category.localeCompare(b.category))
+        break
+      case 'type':
+        sites = [...sites].sort((a, b) => {
+          if (a.llmsTxtType === 'full' && b.llmsTxtType !== 'full') return -1
+          if (a.llmsTxtType !== 'full' && b.llmsTxtType === 'full') return 1
+          return 0
+        })
+        break
+    }
+
+    return sites
+  }, [searchQuery, selectedCategory, sortBy])
 
   return (
     <main className="min-h-screen bg-black">
@@ -56,13 +131,65 @@ export default function DirectoryPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
+            className="text-center mb-8"
           >
             <h1 className="text-headline text-white mb-4">Site Directory</h1>
             <p className="text-lg text-neutral-400 max-w-2xl mx-auto">
               Discover sites that support llms.txt and extract their documentation
               with one click.
             </p>
+          </motion.div>
+
+          {/* Health Status Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8 p-4 rounded-xl bg-neutral-900/50 border border-neutral-800"
+          >
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-6">
+                <Link 
+                  href="/directory/health"
+                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                >
+                  <Activity className="w-5 h-5 text-neutral-400" />
+                  <span className="text-sm font-medium text-neutral-300">Live Status</span>
+                </Link>
+                <div className="flex items-center gap-4 text-sm">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    <span className="text-green-400">{healthSummary.online} online</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                    <span className="text-red-400">{healthSummary.offline} offline</span>
+                  </span>
+                  {healthSummary.checking > 0 && (
+                    <span className="flex items-center gap-1.5">
+                      <Loader2 className="w-3 h-3 animate-spin text-neutral-400" />
+                      <span className="text-neutral-400">{healthSummary.checking} checking</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/directory/health"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  View Dashboard
+                </Link>
+                <button
+                  onClick={fetchHealthSummary}
+                  disabled={isLoadingHealth}
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm text-neutral-400 hover:text-white transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isLoadingHealth ? 'animate-spin' : ''}`} />
+                  Refresh
+                </button>
+              </div>
+            </div>
           </motion.div>
 
           {/* Search and filters */}
@@ -73,6 +200,22 @@ export default function DirectoryPage() {
                 onChange={setSearchQuery}
                 placeholder="Search by name, description, or URL..."
               />
+              
+              {/* Sort dropdown */}
+              <div className="relative">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  className="appearance-none px-4 py-3 pr-10 bg-neutral-900 text-neutral-300 border border-neutral-800 rounded-xl hover:bg-neutral-800 hover:text-white transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/20"
+                >
+                  <option value="name-asc">Name (A-Z)</option>
+                  <option value="name-desc">Name (Z-A)</option>
+                  <option value="category">Category</option>
+                  <option value="type">Full llms.txt first</option>
+                </select>
+                <ArrowUpDown className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none" />
+              </div>
+
               <motion.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -144,12 +287,59 @@ interface SuggestSiteModalProps {
   onClose: () => void
 }
 
+interface VerificationPreview {
+  status: 'online' | 'offline' | 'error'
+  llmsTxtUrl?: string
+  llmsFullTxtUrl?: string
+  size?: number
+  type?: 'full' | 'standard'
+}
+
 function SuggestSiteModal({ onClose }: SuggestSiteModalProps) {
   const [url, setUrl] = useState('')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'verifying' | 'verified' | 'loading' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [verification, setVerification] = useState<VerificationPreview | null>(null)
+
+  // Auto-verify when URL changes
+  const handleUrlChange = async (newUrl: string) => {
+    setUrl(newUrl)
+    setVerification(null)
+    setErrorMessage('')
+
+    if (!newUrl || !newUrl.startsWith('http')) return
+
+    try {
+      new URL(newUrl) // Validate URL
+    } catch {
+      return
+    }
+
+    setStatus('verifying')
+
+    try {
+      const response = await fetch(`/api/sites/verify?url=${encodeURIComponent(newUrl)}`)
+      if (response.ok) {
+        const result = await response.json()
+        setVerification({
+          status: result.status,
+          llmsTxtUrl: result.llmsTxt?.url,
+          llmsFullTxtUrl: result.llmsFullTxt?.url,
+          size: result.llmsFullTxt?.size || result.llmsTxt?.size,
+          type: result.llmsFullTxt?.type || result.llmsTxt?.type,
+        })
+        setStatus(result.status === 'online' ? 'verified' : 'idle')
+        
+        if (result.status !== 'online') {
+          setErrorMessage('No llms.txt found at this URL. The site may not support the llms.txt standard.')
+        }
+      }
+    } catch {
+      setStatus('idle')
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -160,7 +350,12 @@ function SuggestSiteModal({ onClose }: SuggestSiteModalProps) {
       const response = await fetch('/api/sites/suggest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, name, description }),
+        body: JSON.stringify({ 
+          url, 
+          name, 
+          description,
+          verification: verification,
+        }),
       })
 
       const data = await response.json()
@@ -221,16 +416,56 @@ function SuggestSiteModal({ onClose }: SuggestSiteModalProps) {
               <label htmlFor="url" className="block text-sm font-medium text-neutral-300 mb-1.5">
                 Site URL <span className="text-red-400">*</span>
               </label>
-              <input
-                type="url"
-                id="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://docs.example.com"
-                required
-                className="w-full px-4 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-neutral-600"
-              />
+              <div className="relative">
+                <input
+                  type="url"
+                  id="url"
+                  value={url}
+                  onChange={(e) => handleUrlChange(e.target.value)}
+                  placeholder="https://docs.example.com"
+                  required
+                  className="w-full px-4 py-2.5 bg-neutral-800 border border-neutral-700 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-neutral-600"
+                />
+                {status === 'verifying' && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <Loader2 className="w-4 h-4 animate-spin text-neutral-400" />
+                  </div>
+                )}
+                {status === 'verified' && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <CheckCircle className="w-4 h-4 text-green-400" />
+                  </div>
+                )}
+              </div>
             </div>
+
+            {/* Verification result */}
+            {verification && verification.status === 'online' && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg"
+              >
+                <div className="flex items-center gap-2 text-green-400 text-sm font-medium mb-2">
+                  <CheckCircle className="w-4 h-4" />
+                  llms.txt found!
+                </div>
+                <div className="text-xs text-neutral-400 space-y-1">
+                  {verification.llmsFullTxtUrl && (
+                    <p>✓ llms-full.txt available</p>
+                  )}
+                  {verification.llmsTxtUrl && !verification.llmsFullTxtUrl && (
+                    <p>✓ llms.txt available</p>
+                  )}
+                  {verification.size && (
+                    <p>Size: {(verification.size / 1024).toFixed(1)} KB</p>
+                  )}
+                  {verification.type && (
+                    <p>Type: {verification.type === 'full' ? 'Full documentation' : 'Standard'}</p>
+                  )}
+                </div>
+              </motion.div>
+            )}
 
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-neutral-300 mb-1.5">
@@ -261,7 +496,7 @@ function SuggestSiteModal({ onClose }: SuggestSiteModalProps) {
               />
             </div>
 
-            {status === 'error' && (
+            {(status === 'error' || (errorMessage && status === 'idle')) && (
               <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 <span>{errorMessage}</span>
@@ -278,13 +513,18 @@ function SuggestSiteModal({ onClose }: SuggestSiteModalProps) {
               </button>
               <button
                 type="submit"
-                disabled={status === 'loading'}
+                disabled={status === 'loading' || status === 'verifying'}
                 className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-black font-medium rounded-lg hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {status === 'loading' ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Checking...
+                    Submitting...
+                  </>
+                ) : status === 'verifying' ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Verifying...
                   </>
                 ) : (
                   'Submit'

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Zap, Github, FolderOpen, Menu, X, Layers, FileEdit, Terminal } from 'lucide-react'
+import { Zap, Github, FolderOpen, Menu, X, Layers, FileEdit, Terminal, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 
 const NAV_ITEMS = [
@@ -10,8 +10,9 @@ const NAV_ITEMS = [
   { href: '/batch', label: 'Batch', icon: Layers },
   { href: '/generator', label: 'llms.txt', icon: FileEdit },
   { href: '/install-generator', label: 'install.md', icon: Terminal },
-  { href: '#how-it-works', label: 'How it works' },
-  { href: '#features', label: 'Features' },
+  { href: '/docs/', label: 'Docs', icon: BookOpen },
+  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/#features', label: 'Features' },
 ]
 
 export default function Header() {
@@ -70,24 +71,14 @@ export default function Header() {
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8 text-sm" aria-label="Main navigation">
             {NAV_ITEMS.map((item) => (
-              item.href.startsWith('/') ? (
-                <Link 
-                  key={item.href}
-                  href={item.href} 
-                  className="flex items-center gap-1.5 text-neutral-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded px-2 py-1 -mx-2 -my-1"
-                >
-                  {item.icon && <item.icon className="w-4 h-4" />}
-                  {item.label}
-                </Link>
-              ) : (
-                <a 
-                  key={item.href}
-                  href={item.href} 
-                  className="text-neutral-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded px-2 py-1 -mx-2 -my-1"
-                >
-                  {item.label}
-                </a>
-              )
+              <Link 
+                key={item.href}
+                href={item.href} 
+                className="flex items-center gap-1.5 text-neutral-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/20 rounded px-2 py-1 -mx-2 -my-1"
+              >
+                {item.icon && <item.icon className="w-4 h-4" />}
+                {item.label}
+              </Link>
             ))}
           </nav>
 
@@ -103,12 +94,12 @@ export default function Header() {
               <Github className="w-4 h-4" />
               <span>GitHub</span>
             </a>
-            <a
-              href="#extract"
+            <Link
+              href="/"
               className="px-4 py-2 text-sm font-medium bg-white text-black rounded-lg hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
             >
               Get started
-            </a>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -156,24 +147,14 @@ export default function Header() {
                 <ul className="space-y-1">
                   {NAV_ITEMS.map((item) => (
                     <li key={item.href}>
-                      {item.href.startsWith('/') ? (
-                        <Link
-                          href={item.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 text-base text-neutral-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white/20"
-                        >
-                          {item.icon && <item.icon className="w-5 h-5" />}
-                          {item.label}
-                        </Link>
-                      ) : (
-                        <a
-                          href={item.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="block px-4 py-3 text-base text-neutral-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white/20"
-                        >
-                          {item.label}
-                        </a>
-                      )}
+                      <Link
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 text-base text-neutral-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white/20"
+                      >
+                        {item.icon && <item.icon className="w-5 h-5" />}
+                        {item.label}
+                      </Link>
                     </li>
                   ))}
                   <li className="pt-3 border-t border-neutral-800 mt-3">
@@ -189,13 +170,13 @@ export default function Header() {
                     </a>
                   </li>
                   <li className="pt-2">
-                    <a
-                      href="#extract"
+                    <Link
+                      href="/"
                       onClick={() => setMobileMenuOpen(false)}
                       className="block w-full text-center px-4 py-3 text-base font-medium bg-white text-black rounded-lg hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
                     >
                       Get started
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </nav>

@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "build": "next build",
+    "build": "pnpm docs:build && next build",
     "start": "next start -p 3001",
     "lint": "next lint",
     "test": "vitest",
@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit",
     "docs:install": "pip install -r docs-site/requirements.txt",
     "docs:dev": "cd docs-site && mkdocs serve",
-    "docs:build": "cd docs-site && mkdocs build"
+    "docs:build": "cd docs-site && mkdocs build && rm -rf ../public/docs && cp -r site ../public/docs"
   },
   "dependencies": {
     "@tsparticles/react": "^3.0.0",

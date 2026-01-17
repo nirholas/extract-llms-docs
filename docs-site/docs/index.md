@@ -1,44 +1,51 @@
 # llm.energy
 
-Extract documentation for AI agents from any site with llms.txt and install.md support.
+Extract documentation for AI agents. Fetch llms.txt and install.md from any documentation site, organized into downloadable markdown ready for Claude, ChatGPT, and other AI assistants.
+
+[:octicons-rocket-24: Get Started](https://llm.energy){ .md-button .md-button--primary }
+[:octicons-mark-github-16: View on GitHub](https://github.com/nirholas/extract-llms-docs){ .md-button }
 
 ---
 
-## What is llm.energy?
-
-llm.energy fetches documentation from websites that support the [llms.txt standard](https://llmstxt.org/) and [install.md standard](https://installmd.org/) and organizes it into downloadable markdown files optimized for AI assistants.
+## Features
 
 <div class="grid cards" markdown>
 
--   :material-file-download:{ .lg .middle } **Extract**
+-   :material-file-download:{ .lg .middle } **Smart Extraction**
 
     ---
 
-    Fetch `llms.txt` or `llms-full.txt` from any documentation site
+    Automatically fetches `llms.txt`, `llms-full.txt`, and `install.md` from any documentation site
 
--   :material-file-document-multiple:{ .lg .middle } **Organize**
-
-    ---
-
-    Split content into individual markdown files by section
-
--   :material-robot:{ .lg .middle } **Agent-Ready**
+-   :material-file-document-multiple:{ .lg .middle } **Organized Output**
 
     ---
 
-    Includes `AGENT-GUIDE.md` with instructions for AI assistants
+    Splits content into individual markdown files by section for easy navigation
 
--   :material-folder-zip:{ .lg .middle } **Download**
-
-    ---
-
-    Get individual files or everything as a ZIP archive
-
--   :material-terminal:{ .lg .middle } **install.md**
+-   :material-robot:{ .lg .middle } **Agent-Ready Format**
 
     ---
 
-    Detect and extract installation instructions for LLM agents
+    Includes `AGENT-GUIDE.md` with instructions optimized for AI assistants
+
+-   :material-folder-zip:{ .lg .middle } **One-Click Download**
+
+    ---
+
+    Get individual files or everything bundled as a convenient ZIP archive
+
+-   :material-terminal:{ .lg .middle } **install.md Support**
+
+    ---
+
+    Detect and extract LLM-executable installation instructions automatically
+
+-   :material-api:{ .lg .middle } **MCP Server**
+
+    ---
+
+    Integrate with Claude Desktop, Cursor, and other MCP-compatible tools
 
 </div>
 
@@ -46,29 +53,72 @@ llm.energy fetches documentation from websites that support the [llms.txt standa
 
 ## Quick Start
 
-**Web App**
+=== "Web App"
 
-1. Visit [llm.energy](https://llm.energy)
-2. Enter a documentation URL
-3. Download the extracted files
+    1. Visit [llm.energy](https://llm.energy)
+    2. Enter a documentation URL
+    3. Download the extracted files
 
-**MCP Server**
+=== "MCP Server"
 
-```json
-{
-  "mcpServers": {
-    "llm-energy": {
-      "command": "npx",
-      "args": ["-y", "@llm-energy/mcp-server"]
+    Add to your MCP client configuration:
+
+    ```json
+    {
+      "mcpServers": {
+        "llm-energy": {
+          "command": "npx",
+          "args": ["-y", "@llm-energy/mcp-server"]
+        }
+      }
     }
-  }
-}
-```
+    ```
+
+    See [MCP Server Installation](mcp-server/installation.md) for detailed setup.
+
+=== "API"
+
+    ```bash
+    curl -X POST https://llm.energy/api/extract \
+      -H "Content-Type: application/json" \
+      -d '{"url": "docs.anthropic.com"}'
+    ```
+
+    See [API Reference](api-reference.md) for all endpoints.
+
+---
+
+## Supported Standards
+
+llm.energy supports two complementary standards for LLM-friendly documentation:
+
+| Standard | Description | Learn More |
+|----------|-------------|------------|
+| **llms.txt** | Machine-readable documentation at `/llms.txt` | [llms.txt Standard](llms-txt-standard.md) |
+| **install.md** | LLM-executable installation instructions | [install.md Standard](install-md-standard.md) |
 
 ---
 
 ## Links
 
-- [GitHub Repository](https://github.com/nirholas/extract-llms-docs)
-- [MCP Server](mcp-server/installation.md)
-- [API Reference](api-reference.md)
+<div class="grid cards" markdown>
+
+-   :material-book-open-variant:{ .lg .middle } **Documentation**
+
+    ---
+
+    [Overview](overview.md) · [Examples](examples.md) · [API Reference](api-reference.md)
+
+-   :material-server:{ .lg .middle } **MCP Server**
+
+    ---
+
+    [Installation](mcp-server/installation.md) · [Available Tools](mcp-server/tools.md)
+
+-   :material-github:{ .lg .middle } **Open Source**
+
+    ---
+
+    [GitHub Repository](https://github.com/nirholas/extract-llms-docs)
+
+</div>

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Github, ArrowRight, FileText, Bot, Download } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import UrlInput from './UrlInput'
 
 const QUICK_TRY = [
@@ -118,12 +119,12 @@ export default function Hero() {
         transition={{ delay: 0.4 }}
         className="flex flex-wrap justify-center gap-4 mb-12"
       >
-        <a
-          href="#how-it-works"
+        <Link
+          href="/#how-it-works"
           className="px-6 py-3 bg-transparent border border-neutral-700 rounded-xl font-semibold text-white hover:border-neutral-500 hover:bg-white/5 transition-all"
         >
           How It Works
-        </a>
+        </Link>
         <a
           href="https://github.com/nirholas/lyra-tool-discovery"
           target="_blank"

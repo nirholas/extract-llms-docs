@@ -34,6 +34,10 @@ llm.energy makes it simple to extract, process, and use both types of AI-optimiz
 - Generate llms.txt files for your own projects
 - **Create install.md files for autonomous AI installation**
 
+## Documentation
+
+Full documentation is available at **https://llm.energy/docs/**
+
 ## Installation
 
 ### Web Application
