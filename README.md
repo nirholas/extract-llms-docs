@@ -1,7 +1,7 @@
 # llm.energy
 
 <p align="center">
-  <img src="public/docs/assets/images/logo-banner.svg" alt="llm.energy - Extract Documentation for AI Agents" width="600" />
+  <img src="public/docs/assets/images/banner.png" alt="llm.energy - Extract Documentation for AI Agents" width="600" />
 </p>
 
 <p align="center">
