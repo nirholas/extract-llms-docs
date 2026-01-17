@@ -21,18 +21,6 @@
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome" />
 </p>
 
----
-
-## 🎬 Demo
-
-<p align="center">
-  <img src="public/docs/assets/images/demo.gif" alt="llm.energy demo - extracting documentation" width="700" />
-</p>
-
-> **Try it now:** Visit [llm.energy](https://llm.energy) and enter any documentation URL!
-
----
-
 ## 📖 Overview
 
 llm.energy is a web application and MCP server that fetches, parses, and organizes documentation from websites implementing the llms.txt and install.md standards. It transforms raw documentation into structured, agent-ready formats optimized for large language models, AI assistants, and developer tooling.
