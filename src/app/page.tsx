@@ -2,6 +2,7 @@
 
 import Header from '@/components/Header'
 import Hero from '@/components/Hero'
+import ProductCards from '@/components/ProductCards'
 import HowItWorks from '@/components/HowItWorks'
 import Features from '@/components/Features'
 import Stats from '@/components/Stats'
@@ -16,6 +17,7 @@ export default function Home() {
       
       <div className="container mx-auto px-4 pt-24 pb-16">
         <Hero />
+        <ProductCards />
         <HowItWorks />
         <Stats />
         <Features />
