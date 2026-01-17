@@ -324,3 +324,6 @@ export async function fetchInstallMd(url: string): Promise<ParsedInstallMd | nul
 }
 
 export { generateId }
+
+// Re-export types for convenience
+export type { ParsedInstallMd, InstallMdTodoItem, InstallMdStep } from '@/types'

@@ -43,9 +43,22 @@ export default function InstallMdWizard({ onComplete }: InstallMdWizardProps) {
     } else {
       const template = INSTALL_MD_TEMPLATES[templateKey as InstallMdTemplateKey]
       if (template) {
+        // Deep copy to avoid readonly type issues
         setData({
           ...createDefaultGeneratorData(),
-          ...template.data,
+          objective: template.data.objective,
+          doneWhen: template.data.doneWhen,
+          todoItems: template.data.todoItems.map(t => ({ 
+            id: t.id, 
+            text: t.text, 
+            completed: t.completed 
+          })),
+          steps: template.data.steps.map(s => ({
+            id: s.id,
+            title: s.title,
+            description: s.description,
+            codeBlocks: s.codeBlocks.map(cb => ({ ...cb })),
+          })),
           productName: data.productName || '',
           description: data.description || '',
         })
