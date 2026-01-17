@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "build": "pnpm docs:build && next build",
+    "build": "next build",
     "start": "next start -p 3001",
     "lint": "next lint",
     "test": "vitest",
