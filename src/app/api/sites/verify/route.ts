@@ -1,11 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { KNOWN_SITES, VerificationResult, LlmsTxtInfo } from '@/data/sites'
+import { getRateLimiter } from '@/lib/rate-limiter'
 
-const TIMEOUT_MS = 10000
-const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
+const TIMEOUT_MS = parseInt(process.env.VERIFY_TIMEOUT_MS || '10000', 10)
+const CACHE_TTL_MS = parseInt(process.env.VERIFY_CACHE_TTL_MS || '300000', 10) // 5 minutes default
 
 // In-memory cache for verification results
 const verificationCache = new Map<string, { result: VerificationResult; timestamp: number }>()
+
+// Get rate limiter with more lenient limits for verification
+const rateLimiter = getRateLimiter({ windowMs: 60 * 1000, maxRequests: 60 })
+
+/**
+ * Get client IP from request headers
+ */
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    request.headers.get('cf-connecting-ip') ||
+    'unknown'
+  )
+}
 
 /**
  * Check if a URL returns a valid llms.txt file
@@ -172,6 +188,25 @@ async function verifySite(baseUrl: string): Promise<VerificationResult> {
  * Verify a single site's llms.txt availability
  */
 export async function GET(request: NextRequest) {
+  // Rate limiting
+  const clientIp = getClientIp(request)
+  const rateLimitResult = rateLimiter.checkAndRecord(clientIp)
+  
+  if (!rateLimitResult.allowed) {
+    const headers = rateLimiter.getHeaders(rateLimitResult)
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { 
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': headers['X-RateLimit-Limit'],
+          'X-RateLimit-Remaining': headers['X-RateLimit-Remaining'],
+          'X-RateLimit-Reset': headers['X-RateLimit-Reset'],
+        },
+      }
+    )
+  }
+
   const url = request.nextUrl.searchParams.get('url')
   const siteId = request.nextUrl.searchParams.get('id')
   const noCache = request.nextUrl.searchParams.get('nocache') === 'true'
@@ -225,6 +260,20 @@ export async function GET(request: NextRequest) {
  * Verify multiple sites at once (batch verification)
  */
 export async function POST(request: NextRequest) {
+  // Rate limiting - batch requests cost more
+  const clientIp = getClientIp(request)
+  const rateLimitResult = rateLimiter.checkAndRecord(clientIp)
+  
+  if (!rateLimitResult.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { 
+        status: 429,
+        headers: rateLimiter.getHeaders(rateLimitResult),
+      }
+    )
+  }
+
   try {
     const body = await request.json()
     const { siteIds, urls, noCache } = body as {

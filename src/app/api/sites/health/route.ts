@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { KNOWN_SITES, VerificationResult } from '@/data/sites'
+import { getRateLimiter } from '@/lib/rate-limiter'
 
-const TIMEOUT_MS = 8000
+const TIMEOUT_MS = parseInt(process.env.HEALTH_TIMEOUT_MS || '8000', 10)
 
 interface HealthCheckResult {
   id: string
@@ -24,6 +25,21 @@ interface HealthReport {
   slow: number
   averageResponseTime: number
   results: HealthCheckResult[]
+}
+
+// Rate limiter for health endpoint (more restrictive since it's resource-intensive)
+const rateLimiter = getRateLimiter({ windowMs: 60 * 1000, maxRequests: 30 })
+
+/**
+ * Get client IP from request headers
+ */
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    request.headers.get('cf-connecting-ip') ||
+    'unknown'
+  )
 }
 
 // In-memory storage for last health report
@@ -135,6 +151,25 @@ async function checkSiteHealth(site: typeof KNOWN_SITES[number]): Promise<Health
  * Get health status of all known sites
  */
 export async function GET(request: NextRequest) {
+  // Rate limiting
+  const clientIp = getClientIp(request)
+  const rateLimitResult = rateLimiter.checkAndRecord(clientIp)
+  
+  if (!rateLimitResult.allowed) {
+    const headers = rateLimiter.getHeaders(rateLimitResult)
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { 
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': headers['X-RateLimit-Limit'],
+          'X-RateLimit-Remaining': headers['X-RateLimit-Remaining'],
+          'X-RateLimit-Reset': headers['X-RateLimit-Reset'],
+        },
+      }
+    )
+  }
+
   const forceRefresh = request.nextUrl.searchParams.get('refresh') === 'true'
   const siteId = request.nextUrl.searchParams.get('id')
 

@@ -23,9 +23,18 @@ export async function GET() {
 export async function DELETE(request: NextRequest) {
   // Simple protection - require admin key header
   const adminKey = request.headers.get('x-admin-key')
-  const expectedKey = process.env.ADMIN_KEY || 'llms-forge-admin'
+  const expectedKey = process.env.ADMIN_KEY
 
-  if (adminKey !== expectedKey) {
+  // In production, ADMIN_KEY must be set
+  if (!expectedKey) {
+    console.error('ADMIN_KEY environment variable is not set')
+    return NextResponse.json(
+      { error: 'Server configuration error' },
+      { status: 500 }
+    )
+  }
+
+  if (!adminKey || adminKey !== expectedKey) {
     return NextResponse.json(
       { error: 'Unauthorized' },
       { status: 401 }
