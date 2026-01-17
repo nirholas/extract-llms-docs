@@ -55,7 +55,7 @@ export default function Hero() {
         transition={{ delay: 0.15 }}
         className="text-xl text-neutral-400 mb-8"
       >
-        Enter any URL to get started
+        Extract llms.txt and install.md from any documentation site
       </motion.p>
 
       {/* URL Input - PROMINENT, centerpiece */}

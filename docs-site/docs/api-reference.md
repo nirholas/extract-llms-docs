@@ -90,3 +90,61 @@ GET /fetch?url={url}&full={boolean}
 | 400 | Invalid request parameters |
 | 404 | No llms.txt found |
 | 500 | Server error |
+
+---
+
+### Validate install.md
+
+```
+POST /validate-install
+```
+
+**Request Body**
+
+```json
+{
+  "content": "# my-tool\n\nOBJECTIVE: Install the tool..."
+}
+```
+
+Or validate from URL:
+
+```json
+{
+  "url": "https://example.com/install.md"
+}
+```
+
+**Response**
+
+```json
+{
+  "valid": true,
+  "parsed": {
+    "productName": "my-tool",
+    "objective": "Install the tool",
+    "doneWhen": "Tool is working",
+    "todoItems": [...],
+    "steps": [...]
+  }
+}
+```
+
+---
+
+### Check install.md Existence
+
+```
+GET /validate-install?url={url}
+```
+
+**Response**
+
+```json
+{
+  "exists": true,
+  "url": "https://example.com/install.md",
+  "valid": true,
+  "productName": "my-tool"
+}
+```

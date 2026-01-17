@@ -1,12 +1,12 @@
 # llm.energy
 
-Extract documentation for AI agents from any site with llms.txt support.
+Extract documentation for AI agents from any site with llms.txt and install.md support.
 
 ---
 
 ## What is llm.energy?
 
-llm.energy fetches documentation from websites that support the [llms.txt standard](https://llmstxt.org/) and organizes it into downloadable markdown files optimized for AI assistants.
+llm.energy fetches documentation from websites that support the [llms.txt standard](https://llmstxt.org/) and [install.md standard](https://installmd.org/) and organizes it into downloadable markdown files optimized for AI assistants.
 
 <div class="grid cards" markdown>
 
@@ -33,6 +33,12 @@ llm.energy fetches documentation from websites that support the [llms.txt standa
     ---
 
     Get individual files or everything as a ZIP archive
+
+-   :material-terminal:{ .lg .middle } **install.md**
+
+    ---
+
+    Detect and extract installation instructions for LLM agents
 
 </div>
 

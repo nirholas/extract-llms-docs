@@ -20,7 +20,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-neutral-500 text-sm text-center md:text-left max-w-md">
-              Extract llms.txt files and convert them into organized markdown documents ready for AI agents.
+              Extract llms.txt and install.md files, converting them into organized documents ready for AI agents.
             </p>
           </div>
 

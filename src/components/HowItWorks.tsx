@@ -7,19 +7,19 @@ const steps = [
   {
     number: 1,
     title: 'Paste URL',
-    description: 'Enter any documentation site URL. We support any site that has an llms.txt or llms-full.txt file.',
+    description: 'Enter any documentation site URL. We detect llms.txt, llms-full.txt, and install.md automatically.',
     icon: Globe,
   },
   {
     number: 2,
     title: 'Extract',
-    description: 'We automatically find and fetch the llms.txt file, then parse it into organized sections.',
+    description: 'We find and fetch documentation files, then parse them into organized sections with install instructions.',
     icon: Download,
   },
   {
     number: 3,
     title: 'Download',
-    description: 'Get individual markdown files for each section, plus a complete bundle with AGENT-GUIDE.md.',
+    description: 'Get individual markdown files, install.md for AI installation, plus AGENT-GUIDE.md.',
     icon: Files,
   },
 ]

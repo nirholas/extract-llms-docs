@@ -63,6 +63,45 @@ docs.stripe.com
 
 ---
 
+## Using install.md
+
+### Extracting install.md
+
+When extracting from a site that has install.md, llm.energy will automatically detect and include it:
+
+```bash
+# URL with install.md
+python.langchain.com
+```
+
+**Result:** Documentation files + `install.md` with installation instructions.
+
+### Creating install.md
+
+Use the [install.md Generator](/install-generator) to create your own:
+
+1. Go to the Generator page
+2. Fill in product name, objective, and done criteria
+3. Add TODO items (checklist for the LLM)
+4. Add installation steps with code blocks
+5. Download the generated `install.md`
+
+### Using install.md with AI Agents
+
+Give an AI agent the install.md file and ask it to install the software:
+
+**Example prompt:**
+
+> "Follow the instructions in install.md to set up this tool on my machine"
+
+The agent will:
+
+1. Read the OBJECTIVE to understand the goal
+2. Execute each step in the TODO list
+3. Verify completion against DONE WHEN criteria
+
+---
+
 ## Using the MCP Server
 
 With the MCP server, AI assistants can extract docs programmatically:
