@@ -8,6 +8,7 @@ export interface SiteEntry {
   verified: boolean
   lastChecked?: string
   favicon?: string
+  hasInstallMd?: boolean
 }
 
 export const CATEGORIES = [
@@ -81,6 +82,7 @@ export const KNOWN_SITES: SiteEntry[] = [
     llmsTxtType: 'full',
     verified: true,
     lastChecked: '2026-01-15',
+    hasInstallMd: true,
   },
   {
     id: 'nextjs',

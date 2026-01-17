@@ -43,6 +43,7 @@ export interface UrlAnalysis {
   baseUrl: string
   strategy: 'llms-txt' | 'sitemap' | 'docs-discovery' | 'html-scrape'
   llmsTxtUrl: string | null
+  installMdUrl: string | null
   sitemapUrl: string | null
   docsUrl: string | null
   pages: string[]
@@ -196,4 +197,57 @@ export interface GeneratorData {
   description: string
   url: string
   sections: GeneratorSection[]
+}
+
+// install.md types
+export interface InstallMdTodoItem {
+  id: string
+  text: string
+  completed: boolean
+}
+
+export interface InstallMdStep {
+  id: string
+  title: string
+  description: string
+  codeBlocks: Array<{
+    language: string
+    code: string
+    label?: string
+  }>
+}
+
+export interface InstallMdData {
+  productName: string
+  description: string
+  actionPrompt: string
+  objective: string
+  doneWhen: string
+  todoItems: InstallMdTodoItem[]
+  prerequisites?: InstallMdStep
+  steps: InstallMdStep[]
+  additionalSections?: InstallMdStep[]
+  llmsTxtUrl?: string
+}
+
+export interface InstallMdGeneratorData {
+  productName: string
+  description: string
+  objective: string
+  doneWhen: string
+  todoItems: InstallMdTodoItem[]
+  steps: InstallMdStep[]
+}
+
+export interface ParsedInstallMd {
+  raw: string
+  productName: string
+  description: string
+  actionPrompt: string
+  objective: string
+  doneWhen: string
+  todoItems: InstallMdTodoItem[]
+  steps: InstallMdStep[]
+  isValid: boolean
+  validationErrors: string[]
 }

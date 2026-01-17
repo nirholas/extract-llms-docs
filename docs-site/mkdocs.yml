@@ -81,7 +81,9 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Overview: overview.md
-  - llms.txt Standard: llms-txt-standard.md
+  - Standards:
+    - llms.txt: llms-txt-standard.md
+    - install.md: install-md-standard.md
   - Examples: examples.md
   - MCP Server:
     - Installation: mcp-server/installation.md

@@ -41,6 +41,12 @@ export interface GeneratedOutputs {
     content: string
     size: number
   }
+  installMd?: {
+    filename: string
+    content: string
+    size: number
+    url: string
+  }
 }
 
 /**
@@ -55,12 +61,23 @@ function getByteSize(content: string): number {
 }
 
 /**
+ * Options for generating outputs
+ */
+export interface GenerateOutputsOptions {
+  installMd?: {
+    url: string
+    raw: string
+  }
+}
+
+/**
  * Generate all output files from extracted documents
  */
 export function generateOutputs(
   documents: MarkdownDocument[],
   sourceUrl: string,
-  siteName: string
+  siteName: string,
+  options?: GenerateOutputsOptions
 ): GeneratedOutputs {
   // 1. Full Document - All content in one file
   const fullContent = generateFullDocument(documents, sourceUrl, siteName)
@@ -106,6 +123,15 @@ export function generateOutputs(
       content: readmeContent,
       size: getByteSize(readmeContent),
     },
+    // 6. install.md (if provided)
+    ...(options?.installMd ? {
+      installMd: {
+        filename: 'install.md',
+        content: options.installMd.raw,
+        size: getByteSize(options.installMd.raw),
+        url: options.installMd.url,
+      }
+    } : {}),
   }
 }
 

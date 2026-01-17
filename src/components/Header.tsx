@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Zap, Github, FolderOpen, Menu, X, Layers, FileEdit } from 'lucide-react'
+import { Zap, Github, FolderOpen, Menu, X, Layers, FileEdit, Terminal } from 'lucide-react'
 import Link from 'next/link'
 
 const NAV_ITEMS = [
   { href: '/directory', label: 'Directory', icon: FolderOpen },
   { href: '/batch', label: 'Batch', icon: Layers },
-  { href: '/generator', label: 'Generator', icon: FileEdit },
+  { href: '/generator', label: 'llms.txt', icon: FileEdit },
+  { href: '/install-generator', label: 'install.md', icon: Terminal },
   { href: '#how-it-works', label: 'How it works' },
   { href: '#features', label: 'Features' },
 ]

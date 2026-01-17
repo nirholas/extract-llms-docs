@@ -6,6 +6,7 @@ import { analyzeUrl, type UrlAnalysis, type ExtractionStrategy } from './url-ana
 import { parseSitemap, sortDocumentationUrls } from './sitemap-parser';
 import { scrapePageToMarkdown, scrapePages, countWords, type MarkdownDocument } from './html-to-markdown';
 import { extractSiteName, estimateTokens, slugify } from './parser';
+import { fetchInstallMd, type ParsedInstallMd } from './install-md-parser';
 
 /**
  * Progress callback types
@@ -41,6 +42,11 @@ export interface ExtractionResult {
   fullDocument: string;
   agentPrompt: string;
   mcpConfig: object;
+  installMd?: {
+    url: string;
+    raw: string;
+    parsed: ParsedInstallMd;
+  };
   stats: {
     totalDocuments: number;
     totalWords: number;
@@ -356,6 +362,35 @@ export async function extract(options: ExtractionOptions): Promise<ExtractionRes
     const agentPrompt = generateAgentPrompt(documents, sourceUrl, siteName);
     const mcpConfig = generateMcpConfig(sourceUrl, siteName);
 
+    // Step 4: Check for install.md if URL was detected
+    let installMdResult: ExtractionResult['installMd'] = undefined;
+    if (analysis.installMdUrl) {
+      onProgress?.({
+        status: 'processing',
+        message: 'Found install.md! Fetching...',
+        progress: 90,
+      });
+      
+      try {
+        const parsed = await fetchInstallMd(analysis.installMdUrl);
+        if (parsed) {
+          // Fetch raw content
+          const response = await fetch(analysis.installMdUrl, {
+            headers: { 'User-Agent': 'llms-forge/1.0 (Documentation Extractor)' },
+          });
+          const raw = await response.text();
+          
+          installMdResult = {
+            url: analysis.installMdUrl,
+            raw,
+            parsed,
+          };
+        }
+      } catch {
+        // install.md is optional, continue without it
+      }
+    }
+
     // Calculate stats
     const totalWords = documents.reduce((sum, d) => sum + d.wordCount, 0);
     const totalCharacters = fullDocument.length;
@@ -364,7 +399,9 @@ export async function extract(options: ExtractionOptions): Promise<ExtractionRes
 
     onProgress?.({
       status: 'complete',
-      message: 'Extraction complete!',
+      message: installMdResult 
+        ? 'Extraction complete! Found install.md!' 
+        : 'Extraction complete!',
       progress: 100,
     });
 
@@ -381,6 +418,7 @@ export async function extract(options: ExtractionOptions): Promise<ExtractionRes
       fullDocument,
       agentPrompt,
       mcpConfig,
+      installMd: installMdResult,
       stats: {
         totalDocuments: documents.length,
         totalWords,
@@ -427,3 +465,4 @@ export async function extract(options: ExtractionOptions): Promise<ExtractionRes
 
 // Re-export types
 export type { MarkdownDocument, UrlAnalysis, ExtractionStrategy };
+export type { ParsedInstallMd };

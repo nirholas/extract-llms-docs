@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Download, FileText, FolderArchive, Code, Settings, Check, Loader2 } from 'lucide-react'
+import { Download, FileText, FolderArchive, Code, Settings, Check, Loader2, Terminal } from 'lucide-react'
 import { createZipBundle, formatSize, getFileCount, calculateZipSize } from '@/lib/zip-builder'
 import { slugify } from '@/lib/parser'
 import { EXPORT_FORMATS, getExtensionForFormat, getMimeTypeForFormat } from '@/lib/exporters'
@@ -221,6 +221,19 @@ export default function DownloadPanel({ outputs, siteName }: DownloadPanelProps)
           isDownloaded={isDownloaded(outputs.readme.filename)}
         />
 
+        {/* install.md (if available) */}
+        {outputs.installMd && (
+          <DownloadButton
+            onClick={() => downloadFile(outputs.installMd!.filename, outputs.installMd!.content)}
+            icon={<Terminal className="w-4 h-4 text-green-400" />}
+            filename={outputs.installMd.filename}
+            size={outputs.installMd.size}
+            isDownloading={isDownloading(outputs.installMd.filename)}
+            isDownloaded={isDownloaded(outputs.installMd.filename)}
+            highlight={true}
+          />
+        )}
+
         {/* Sections Count */}
         <div className="p-3 rounded-lg border border-neutral-800 text-neutral-400 text-sm flex items-center justify-between">
           <span>+ {outputs.sections.length} section files</span>
@@ -238,6 +251,7 @@ interface DownloadButtonProps {
   size: number
   isDownloading: boolean
   isDownloaded: boolean
+  highlight?: boolean
 }
 
 function DownloadButton({
@@ -247,12 +261,17 @@ function DownloadButton({
   size,
   isDownloading,
   isDownloaded,
+  highlight = false,
 }: DownloadButtonProps) {
   return (
     <button
       onClick={onClick}
       disabled={isDownloading}
-      className="w-full flex items-center justify-between p-3 rounded-lg border border-neutral-800 hover:border-neutral-600 transition-colors disabled:opacity-50"
+      className={`w-full flex items-center justify-between p-3 rounded-lg border transition-colors disabled:opacity-50 ${
+        highlight 
+          ? 'border-green-700/50 bg-green-900/20 hover:border-green-600/50' 
+          : 'border-neutral-800 hover:border-neutral-600'
+      }`}
     >
       <div className="flex items-center gap-3">
         {isDownloading ? (
@@ -263,6 +282,9 @@ function DownloadButton({
           icon
         )}
         <span className="text-white">{filename}</span>
+        {highlight && (
+          <span className="text-xs px-1.5 py-0.5 bg-green-500/20 text-green-400 rounded">NEW</span>
+        )}
       </div>
       <span className="text-sm text-neutral-500">{formatSize(size)}</span>
     </button>

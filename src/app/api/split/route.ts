@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { discoverLlmsTxt } from '@/lib/url-discovery'
+import { fetchInstallMd, parseInstallMd, isValidInstallMd } from '@/lib/install-md-parser'
+import type { ParsedInstallMd } from '@/types'
 
 interface SplitDocument {
   filename: string
@@ -138,6 +140,51 @@ export async function GET(request: NextRequest) {
     const documents = splitIntoPages(content)
     const siteName = urlObj.host.replace('www.', '').replace('docs.', '').split('.')[0]
     
+    // Try to fetch install.md
+    let installMd: ParsedInstallMd | null = null
+    let installMdUrl: string | null = null
+    
+    // Check common install.md locations
+    const installMdPaths = [
+      '/install.md',
+      '/docs/install.md',
+    ]
+    
+    for (const path of installMdPaths) {
+      const tryUrl = `${urlObj.protocol}//${urlObj.host}${path}`
+      try {
+        const response = await fetch(tryUrl, {
+          headers: { 'User-Agent': 'llms-forge/1.0' },
+        })
+        if (response.ok) {
+          const text = await response.text()
+          // Check if it's valid install.md format
+          if (text && isValidInstallMd(text)) {
+            installMd = parseInstallMd(text)
+            installMdUrl = tryUrl
+            break
+          }
+        }
+      } catch { continue }
+    }
+    
+    // Also try docs subdomain
+    if (!installMd) {
+      try {
+        const docsUrl = `https://docs.${urlObj.host.replace(/^docs\./, '')}/install.md`
+        const response = await fetch(docsUrl, {
+          headers: { 'User-Agent': 'llms-forge/1.0' },
+        })
+        if (response.ok) {
+          const text = await response.text()
+          if (text && isValidInstallMd(text)) {
+            installMd = parseInstallMd(text)
+            installMdUrl = docsUrl
+          }
+        }
+      } catch { /* continue */ }
+    }
+    
     return NextResponse.json({
       siteName,
       sourceUrl,
@@ -149,7 +196,10 @@ export async function GET(request: NextRequest) {
         filename: d.filename,
         title: d.title,
         order: d.order
-      }))
+      })),
+      // Include install.md if found
+      installMd,
+      installMdUrl,
     })
     
   } catch (error) {

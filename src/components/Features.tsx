@@ -2,19 +2,19 @@
 
 import { motion } from 'framer-motion'
 import { 
-  Search, Scissors, Bot, Archive, FileText, Download
+  Search, Scissors, Bot, Archive, FileText, Download, Terminal
 } from 'lucide-react'
 
 const FEATURES = [
   {
     icon: Search,
     title: 'Smart Extraction',
-    description: 'Fetches llms.txt or llms-full.txt from any documentation site.',
+    description: 'Fetches llms.txt, llms-full.txt, and install.md from any documentation site.',
   },
   {
-    icon: Scissors,
-    title: 'Organized Sections',
-    description: 'Splits documentation into individual markdown files by section headers.',
+    icon: Terminal,
+    title: 'install.md Support',
+    description: 'Detects and extracts LLM-executable installation instructions automatically.',
   },
   {
     icon: Bot,

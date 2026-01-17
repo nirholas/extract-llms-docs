@@ -2,9 +2,10 @@
 
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
-import { ArrowLeft, Download, FileText, Check, Loader2, AlertCircle, Copy } from 'lucide-react';
+import { ArrowLeft, Download, FileText, Check, Loader2, AlertCircle, Copy, Terminal, CheckSquare, Square } from 'lucide-react';
 import Link from 'next/link';
 import JSZip from 'jszip';
+import type { ParsedInstallMd, InstallMdTodoItem, InstallMdStep } from '@/types';
 
 interface SplitDocument {
   filename: string;
@@ -19,6 +20,8 @@ interface SplitResult {
   totalPages: number;
   documents: SplitDocument[];
   manifest: { filename: string; title: string; order: number }[];
+  installMd?: ParsedInstallMd | null;
+  installMdUrl?: string | null;
 }
 
 function ExtractPageContent() {
@@ -30,6 +33,7 @@ function ExtractPageContent() {
   const [result, setResult] = useState<SplitResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedDoc, setSelectedDoc] = useState<SplitDocument | null>(null);
+  const [showInstallMd, setShowInstallMd] = useState(false);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
@@ -1069,6 +1073,11 @@ END OF ${data.siteName.toUpperCase()} DOCUMENTATION
         localLlmFolder.file('openwebui-docs.json', generateOpenWebUIContext(result));
       }
 
+      // Add install.md if available
+      if (result.installMd?.isValid && result.installMd.raw) {
+        folder.file('install.md', result.installMd.raw);
+      }
+
       // Generate and download
       const blob = await zip.generateAsync({ type: 'blob' });
       const downloadUrl = URL.createObjectURL(blob);
@@ -1108,14 +1117,22 @@ END OF ${data.siteName.toUpperCase()} DOCUMENTATION
           </div>
           
           {result && (
-            <button
-              onClick={downloadAllZip}
-              disabled={downloading}
-              className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-neutral-200 transition-colors disabled:opacity-50"
-            >
-              {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-              {downloading ? 'Creating ZIP...' : 'Download .zip (' + result.totalPages + ' files)'}
-            </button>
+            <div className="flex items-center gap-3">
+              {result.installMd?.isValid && (
+                <span className="px-2 py-1 text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center gap-1">
+                  <Terminal className="w-3 h-3" />
+                  install.md
+                </span>
+              )}
+              <button
+                onClick={downloadAllZip}
+                disabled={downloading}
+                className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-lg font-medium hover:bg-neutral-200 transition-colors disabled:opacity-50"
+              >
+                {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                {downloading ? 'Creating ZIP...' : 'Download .zip (' + result.totalPages + (result.installMd?.isValid ? '+1' : '') + ' files)'}
+              </button>
+            </div>
           )}
         </div>
       </header>
@@ -1169,12 +1186,35 @@ END OF ${data.siteName.toUpperCase()} DOCUMENTATION
                     from {result.sourceUrl.split('/').pop()}
                   </p>
                 </div>
+                
+                {/* install.md Section */}
+                {result.installMd?.isValid && (
+                  <div className="border-b border-neutral-800">
+                    <button
+                      onClick={() => {
+                        setShowInstallMd(true);
+                        setSelectedDoc(null);
+                      }}
+                      className={'w-full text-left px-4 py-3 hover:bg-neutral-800/50 transition-colors flex items-center gap-2 ' + (showInstallMd ? 'bg-emerald-900/30 border-l-2 border-l-emerald-500' : '')}
+                    >
+                      <Terminal className="w-4 h-4 text-emerald-500" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm text-emerald-400">install.md</p>
+                        <p className="text-xs text-neutral-500 truncate">{result.installMd.productName}</p>
+                      </div>
+                    </button>
+                  </div>
+                )}
+                
                 <div className="max-h-[60vh] overflow-y-auto">
                   {result.documents.map((doc) => (
                     <button
                       key={doc.filename}
-                      onClick={() => setSelectedDoc(doc)}
-                      className={'w-full text-left px-4 py-3 border-b border-neutral-800 hover:bg-neutral-800/50 transition-colors ' + (selectedDoc?.filename === doc.filename ? 'bg-neutral-800 border-l-2 border-l-blue-500' : '')}
+                      onClick={() => {
+                        setSelectedDoc(doc);
+                        setShowInstallMd(false);
+                      }}
+                      className={'w-full text-left px-4 py-3 border-b border-neutral-800 hover:bg-neutral-800/50 transition-colors ' + (selectedDoc?.filename === doc.filename && !showInstallMd ? 'bg-neutral-800 border-l-2 border-l-blue-500' : '')}
                     >
                       <p className="font-medium text-sm truncate">{doc.title}</p>
                       <p className="text-xs text-neutral-500 truncate">{doc.filename}</p>
@@ -1186,7 +1226,133 @@ END OF ${data.siteName.toUpperCase()} DOCUMENTATION
 
             {/* Main Content - Preview */}
             <div className="lg:col-span-3">
-              {selectedDoc && (
+              {/* install.md Preview */}
+              {showInstallMd && result.installMd?.isValid && (
+                <div className="bg-neutral-900 rounded-xl border border-emerald-800/50 overflow-hidden">
+                  {/* File Header */}
+                  <div className="p-4 border-b border-neutral-800 flex items-center justify-between bg-emerald-900/20">
+                    <div className="flex items-center gap-3">
+                      <Terminal className="w-5 h-5 text-emerald-500" />
+                      <div>
+                        <h2 className="font-semibold text-emerald-400">install.md</h2>
+                        <p className="text-sm text-neutral-500">{result.installMd.productName}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => copyContent(result.installMd!.raw)}
+                        className="flex items-center gap-2 px-3 py-1.5 text-sm bg-neutral-800 rounded-lg hover:bg-neutral-700 transition-colors"
+                      >
+                        {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+                        {copied ? 'Copied!' : 'Copy'}
+                      </button>
+                      <button
+                        onClick={() => {
+                          const blob = new Blob([result.installMd!.raw], { type: 'text/markdown' });
+                          const downloadUrl = URL.createObjectURL(blob);
+                          const a = document.createElement('a');
+                          a.href = downloadUrl;
+                          a.download = 'install.md';
+                          a.click();
+                          URL.revokeObjectURL(downloadUrl);
+                        }}
+                        className="flex items-center gap-2 px-3 py-1.5 text-sm bg-emerald-600 rounded-lg hover:bg-emerald-500 transition-colors"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* install.md Content Preview */}
+                  <div className="p-6 space-y-6">
+                    {/* Description */}
+                    {result.installMd.description && (
+                      <div className="text-neutral-300 italic border-l-2 border-emerald-500/50 pl-4">
+                        {result.installMd.description}
+                      </div>
+                    )}
+                    
+                    {/* Objective */}
+                    <div className="bg-neutral-800/50 rounded-lg p-4">
+                      <h3 className="text-sm font-semibold text-emerald-400 mb-2">OBJECTIVE</h3>
+                      <p className="text-neutral-200">{result.installMd.objective}</p>
+                    </div>
+                    
+                    {/* Done When */}
+                    <div className="bg-neutral-800/50 rounded-lg p-4">
+                      <h3 className="text-sm font-semibold text-emerald-400 mb-2">DONE WHEN</h3>
+                      <p className="text-neutral-200">{result.installMd.doneWhen}</p>
+                    </div>
+                    
+                    {/* TODO List */}
+                    <div>
+                      <h3 className="text-sm font-semibold text-emerald-400 mb-3 flex items-center gap-2">
+                        <CheckSquare className="w-4 h-4" />
+                        TODO ({result.installMd.todoItems.length} items)
+                      </h3>
+                      <div className="space-y-2">
+                        {result.installMd.todoItems.map((item: InstallMdTodoItem, idx: number) => (
+                          <div key={idx} className="flex items-start gap-3 text-neutral-300">
+                            {item.completed ? (
+                              <CheckSquare className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                            ) : (
+                              <Square className="w-4 h-4 text-neutral-500 flex-shrink-0 mt-0.5" />
+                            )}
+                            <span className={item.completed ? 'line-through text-neutral-500' : ''}>{item.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Steps */}
+                    {result.installMd.steps.length > 0 && (
+                      <div>
+                        <h3 className="text-sm font-semibold text-emerald-400 mb-3">
+                          Installation Steps ({result.installMd.steps.length})
+                        </h3>
+                        <div className="space-y-4">
+                          {result.installMd.steps.map((step: InstallMdStep, idx: number) => (
+                            <div key={idx} className="bg-neutral-800/30 rounded-lg p-4 border border-neutral-700/50">
+                              <h4 className="font-medium text-neutral-200 mb-2">{step.title}</h4>
+                              {step.description && (
+                                <p className="text-sm text-neutral-400 mb-3">{step.description}</p>
+                              )}
+                              {step.codeBlocks.length > 0 && (
+                                <div className="space-y-2">
+                                  {step.codeBlocks.map((block: { language: string; code: string; label?: string }, blockIdx: number) => (
+                                    <div key={blockIdx}>
+                                      {block.label && (
+                                        <p className="text-xs text-neutral-500 mb-1">{block.label}</p>
+                                      )}
+                                      <pre className="bg-neutral-900 rounded-lg p-3 overflow-x-auto text-sm">
+                                        <code className="text-emerald-300">{block.code}</code>
+                                      </pre>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Raw Content Toggle */}
+                    <details className="group">
+                      <summary className="cursor-pointer text-sm text-neutral-500 hover:text-neutral-300 transition-colors">
+                        Show raw markdown
+                      </summary>
+                      <pre className="mt-3 text-sm text-neutral-400 whitespace-pre-wrap font-mono leading-relaxed bg-neutral-800/30 rounded-lg p-4 max-h-96 overflow-y-auto">
+                        {result.installMd.raw}
+                      </pre>
+                    </details>
+                  </div>
+                </div>
+              )}
+              
+              {/* Document Preview */}
+              {selectedDoc && !showInstallMd && (
                 <div className="bg-neutral-900 rounded-xl border border-neutral-800 overflow-hidden">
                   {/* File Header */}
                   <div className="p-4 border-b border-neutral-800 flex items-center justify-between">

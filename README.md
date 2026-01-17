@@ -1,23 +1,27 @@
 # llm.energy
 
-Extract llms.txt documentation from any website for AI agents, LLMs, and automation workflows.
+Extract llms.txt documentation and install.md instructions from any website for AI agents, LLMs, and automation workflows.
 
 ## Overview
 
-llm.energy is a web application and MCP server that fetches, parses, and organizes documentation from websites implementing the llms.txt standard. It transforms raw documentation into structured, agent-ready formats optimized for large language models, AI assistants, and developer tooling.
+llm.energy is a web application and MCP server that fetches, parses, and organizes documentation from websites implementing the llms.txt and install.md standards. It transforms raw documentation into structured, agent-ready formats optimized for large language models, AI assistants, and developer tooling.
 
-The llms.txt standard (llmstxt.org) provides a standardized way for websites to expose their documentation in a format that AI systems can easily consume. llm.energy makes it simple to extract, process, and use this documentation.
+- **llms.txt** (llmstxt.org) - Provides documentation context for AI systems
+- **install.md** (installmd.org) - Provides LLM-executable installation instructions
+
+llm.energy makes it simple to extract, process, and use both types of AI-optimized content.
 
 ## Key Features
 
-- Automatic detection of llms.txt and llms-full.txt endpoints
+- Automatic detection of llms.txt, llms-full.txt, and install.md endpoints
 - Content parsing and sectioning into organized markdown files
 - MCP (Model Context Protocol) server for programmatic access
 - REST API with built-in caching and rate limiting
 - Batch processing for multiple URLs simultaneously
 - Export formats: Markdown, JSON, YAML
 - Site directory with curated llms.txt-enabled websites
-- llms.txt generator wizard for creating your own
+- **llms.txt generator wizard** for creating your own llms.txt files
+- **install.md generator wizard** for creating LLM-executable installation instructions
 - ZIP download with all extracted documentation
 - Agent-ready output with AGENT-GUIDE.md included
 
@@ -28,6 +32,7 @@ The llms.txt standard (llmstxt.org) provides a standardized way for websites to 
 - Create documentation pipelines for RAG systems
 - Automate documentation aggregation across multiple sources
 - Generate llms.txt files for your own projects
+- **Create install.md files for autonomous AI installation**
 
 ## Installation
 
@@ -89,6 +94,25 @@ Content-Type: application/json
 
 Checks if a URL has llms.txt support before extraction.
 
+### Validate install.md
+
+```bash
+GET /api/validate-install?url={url}
+```
+
+Checks if a URL has an install.md file available.
+
+```bash
+POST /api/validate-install
+Content-Type: application/json
+
+{
+  "content": "# my-product\n\n> Description...\n\nOBJECTIVE: Install the product..."
+}
+```
+
+Validates install.md content against the specification.
+
 ### Batch Processing
 
 ```bash
@@ -136,10 +160,13 @@ extract-llms-docs/
       batch/          Batch processing page
       directory/      Site directory browser
       generator/      llms.txt generator wizard
+      install-generator/  install.md generator wizard
     components/       React UI components
     lib/              Core utilities
       parser.ts       llms.txt parser
       extractor.ts    Content extraction
+      install-md-parser.ts    install.md parser
+      install-md-generator.ts install.md generator
       cache.ts        Response caching
       rate-limiter.ts
     hooks/            React hooks

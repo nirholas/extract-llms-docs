@@ -29,6 +29,11 @@ export async function createZipBundle(
   // Add MCP config
   folder.file(outputs.mcpConfig.filename, outputs.mcpConfig.content)
 
+  // Add install.md if available
+  if (outputs.installMd) {
+    folder.file(outputs.installMd.filename, outputs.installMd.content)
+  }
+
   // Add sections in subfolder
   const sectionsFolder = folder.folder('sections')
   if (sectionsFolder) {
@@ -56,6 +61,7 @@ export async function createCustomZipBundle(
     includeMcpConfig?: boolean
     includeReadme?: boolean
     includeSections?: boolean
+    includeInstallMd?: boolean
   }
 ): Promise<Blob> {
   const zip = new JSZip()
@@ -83,6 +89,11 @@ export async function createCustomZipBundle(
     folder.file(outputs.mcpConfig.filename, outputs.mcpConfig.content)
   }
 
+  // Add install.md if available and not excluded
+  if (outputs.installMd && options.includeInstallMd !== false) {
+    folder.file(outputs.installMd.filename, outputs.installMd.content)
+  }
+
   if (options.includeSections !== false) {
     const sectionsFolder = folder.folder('sections')
     if (sectionsFolder) {
@@ -108,7 +119,8 @@ export function calculateZipSize(outputs: GeneratedOutputs): number {
     outputs.agentPrompt.size +
     outputs.mcpConfig.size +
     outputs.readme.size +
-    outputs.sections.reduce((sum, section) => sum + section.size, 0)
+    outputs.sections.reduce((sum, section) => sum + section.size, 0) +
+    (outputs.installMd?.size || 0)
 
   return totalSize
 }
@@ -117,8 +129,8 @@ export function calculateZipSize(outputs: GeneratedOutputs): number {
  * Get file count for the ZIP
  */
 export function getFileCount(outputs: GeneratedOutputs): number {
-  // 4 main files + sections
-  return 4 + outputs.sections.length
+  // 4 main files + sections + optional install.md
+  return 4 + outputs.sections.length + (outputs.installMd ? 1 : 0)
 }
 
 /**

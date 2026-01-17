@@ -14,6 +14,7 @@ export interface UrlAnalysis {
   baseUrl: string;
   strategy: ExtractionStrategy;
   llmsTxtUrl: string | null;
+  installMdUrl: string | null;
   sitemapUrl: string | null;
   docsUrl: string | null;
   pages: string[];
@@ -167,6 +168,7 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
     baseUrl,
     strategy: 'unknown',
     llmsTxtUrl: null,
+    installMdUrl: null,
     sitemapUrl: null,
     docsUrl: null,
     pages: [],
@@ -182,12 +184,34 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
     `https://api.${rootDomain}`,
   ];
   
+  // Also check for install.md in parallel with llms.txt detection
+  const installMdLocations = [
+    `${baseUrl}/install.md`,
+    `${baseUrl}/docs/install.md`,
+    `https://docs.${rootDomain}/install.md`,
+  ];
+  
+  // Check install.md locations in parallel (async, will set on analysis object)
+  const checkInstallMd = async () => {
+    for (const url of installMdLocations) {
+      if (await urlExists(url)) {
+        return url;
+      }
+    }
+    return null;
+  };
+  
+  // Start install.md check in background
+  const installMdPromise = checkInstallMd();
+  
   // Priority 1: llms-full.txt (complete documentation)
   for (const subdomain of subdomains) {
     const fullUrl = `${subdomain}/llms-full.txt`;
     if (await urlExists(fullUrl)) {
       analysis.llmsTxtUrl = fullUrl;
       analysis.strategy = 'llms-txt';
+      // Wait for install.md check before returning
+      analysis.installMdUrl = await installMdPromise;
       return analysis;
     }
   }
@@ -198,6 +222,8 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
     if (await urlExists(url)) {
       analysis.llmsTxtUrl = url;
       analysis.strategy = 'llms-txt';
+      // Wait for install.md check before returning
+      analysis.installMdUrl = await installMdPromise;
       return analysis;
     }
   }
@@ -206,6 +232,8 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
   if (await urlExists(`${baseUrl}/.well-known/llms.txt`)) {
     analysis.llmsTxtUrl = `${baseUrl}/.well-known/llms.txt`;
     analysis.strategy = 'llms-txt';
+    // Wait for install.md check before returning
+    analysis.installMdUrl = await installMdPromise;
     return analysis;
   }
 
@@ -224,6 +252,8 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
       
       if (analysis.pages.length > 0) {
         analysis.strategy = 'sitemap';
+        // Wait for install.md check before returning
+        analysis.installMdUrl = await installMdPromise;
         return analysis;
       }
     }
@@ -248,6 +278,8 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
     if (await urlExists(url)) {
       analysis.docsUrl = url;
       analysis.strategy = 'docs-discovery';
+      // Wait for install.md check before returning
+      analysis.installMdUrl = await installMdPromise;
       return analysis;
     }
   }
@@ -255,6 +287,8 @@ export async function analyzeUrl(inputUrl: string): Promise<UrlAnalysis> {
   // 4. Fallback: Direct HTML scraping of the input URL
   analysis.strategy = 'html-scrape';
   analysis.pages = [normalizedUrl];
+  // Wait for install.md check before returning
+  analysis.installMdUrl = await installMdPromise;
   return analysis;
 }
 
