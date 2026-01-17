@@ -35,6 +35,11 @@
   --cyber-blue: #a3a3a3;
   --cyber-purple: #737373;
   --cyber-pink: #525252;
+  /* Accessible text colors (WCAG AA compliant) */
+  --text-primary: #ffffff;
+  --text-secondary: #d4d4d4; /* neutral-300, better contrast than neutral-400 */
+  --text-tertiary: #a3a3a3;  /* neutral-400 */
+  --text-muted: #737373;     /* neutral-500 */
 }
 
 * {
@@ -43,6 +48,59 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only:focus,
+.not-sr-only {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Focus visible for keyboard navigation */
+.focus-visible:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* High contrast focus indicator */
+@media (prefers-contrast: high) {
+  :focus {
+    outline: 3px solid currentColor;
+    outline-offset: 3px;
+  }
 }
 
 body {

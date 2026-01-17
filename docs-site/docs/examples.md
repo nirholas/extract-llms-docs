@@ -2,6 +2,9 @@
 
 Real-world examples of using llm.energy.
 
+!!! tip "Try It Live"
+    All examples can be tested at [llm.energy](https://llm.energy) - just enter the URL!
+
 ---
 
 ## Extracting Anthropic Docs

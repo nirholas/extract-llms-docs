@@ -2,6 +2,9 @@
 
 REST API for llm.energy.
 
+!!! info "Authentication"
+    All endpoints are public. Rate limiting applies: 100 requests per minute.
+
 ---
 
 ## Base URL
@@ -78,6 +81,9 @@ GET /fetch?url={url}&full={boolean}
 
 ## Error Responses
 
+!!! warning "Error Handling"
+    All errors return a JSON response with `success: false` and an `error` message.
+
 ```json
 {
   "success": false,
@@ -89,6 +95,7 @@ GET /fetch?url={url}&full={boolean}
 |--------|-------------|
 | 400 | Invalid request parameters |
 | 404 | No llms.txt found |
+| 429 | Rate limit exceeded |
 | 500 | Server error |
 
 ---

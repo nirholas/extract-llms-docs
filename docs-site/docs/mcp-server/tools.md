@@ -2,6 +2,9 @@
 
 Available MCP tools for llm.energy.
 
+!!! success "New Tools"
+    Two new verification tools added: `verify_llms_txt` and `discover_documentation_urls`
+
 ---
 
 ## extract_documentation
@@ -30,6 +33,66 @@ Extract and parse documentation from a website with llms.txt support.
 
 !!! info "Caching"
     After extraction, documentation is cached for quick access via other tools.
+
+---
+
+## verify_llms_txt
+
+Verify if a URL has llms.txt and retrieve file information.
+
+**Parameters**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `url` | string | Yes | Website URL to verify |
+
+**Example**
+
+```json
+{
+  "url": "docs.stripe.com"
+}
+```
+
+**Output**
+
+- Verification status (online/offline/error)
+- File size and last modified date
+- Content type and server information
+- llms.txt URL location
+
+!!! tip "Real-time Verification"
+    This tool performs live HTTP checks - perfect for validating sites before extraction.
+
+---
+
+## discover_documentation_urls
+
+Intelligently discover documentation URLs for a domain.
+
+**Parameters**
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `domain` | string | Yes | Base domain to scan |
+
+**Example**
+
+```json
+{
+  "domain": "anthropic.com"
+}
+```
+
+**Output**
+
+- Discovered documentation URLs
+- Subdomain patterns (docs.*, api.*, developers.*)
+- Confidence scores for each URL
+- Platform detection (GitBook, ReadMe, etc.)
+
+!!! note "Smart Discovery"
+    Checks 50+ common documentation patterns, subdomains, and platform-specific locations.
 
 ---
 

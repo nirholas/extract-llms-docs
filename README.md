@@ -1,61 +1,143 @@
 # llm.energy
 
-Extract llms.txt documentation and install.md instructions from any website for AI agents, LLMs, and automation workflows.
+<p align="center">
+  <img src="public/docs/assets/images/logo-banner.svg" alt="llm.energy - Extract Documentation for AI Agents" width="600" />
+</p>
 
-## Overview
+<p align="center">
+  <strong>Extract llms.txt documentation and install.md instructions from any website for AI agents, LLMs, and automation workflows.</strong>
+</p>
+
+<p align="center">
+  <a href="https://llm.energy"><img src="https://img.shields.io/badge/🌐_Website-llm.energy-black?style=for-the-badge" alt="Website" /></a>
+  <a href="https://llm.energy/docs/"><img src="https://img.shields.io/badge/📚_Docs-Read_Docs-black?style=for-the-badge" alt="Documentation" /></a>
+  <a href="https://www.npmjs.com/package/@llm-energy/mcp-server"><img src="https://img.shields.io/npm/v/@llm-energy/mcp-server?style=for-the-badge&logo=npm&label=MCP%20Server" alt="npm version" /></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome" />
+</p>
+
+---
+
+## 🎬 Demo
+
+<p align="center">
+  <img src="public/docs/assets/images/demo.gif" alt="llm.energy demo - extracting documentation" width="700" />
+</p>
+
+> **Try it now:** Visit [llm.energy](https://llm.energy) and enter any documentation URL!
+
+---
+
+## 📖 Overview
 
 llm.energy is a web application and MCP server that fetches, parses, and organizes documentation from websites implementing the llms.txt and install.md standards. It transforms raw documentation into structured, agent-ready formats optimized for large language models, AI assistants, and developer tooling.
 
-- **llms.txt** (llmstxt.org) - Provides documentation context for AI systems
-- **install.md** (installmd.org) - Provides LLM-executable installation instructions
+| Standard | Description | Learn More |
+|----------|-------------|------------|
+| **llms.txt** | Machine-readable documentation for AI systems | [llmstxt.org](https://llmstxt.org) |
+| **install.md** | LLM-executable installation instructions | [installmd.org](https://installmd.org) |
 
-llm.energy makes it simple to extract, process, and use both types of AI-optimized content.
+---
 
-## Key Features
+## ✨ Key Features
 
-- Automatic detection of llms.txt, llms-full.txt, and install.md endpoints
-- Content parsing and sectioning into organized markdown files
-- MCP (Model Context Protocol) server for programmatic access
-- REST API with built-in caching and rate limiting
-- Batch processing for multiple URLs simultaneously
-- Export formats: Markdown, JSON, YAML
-- Site directory with curated llms.txt-enabled websites
-- **llms.txt generator wizard** for creating your own llms.txt files
-- **install.md generator wizard** for creating LLM-executable installation instructions
-- ZIP download with all extracted documentation
-- Agent-ready output with AGENT-GUIDE.md included
+| Feature | Description |
+|---------|-------------|
+| 🔍 **Smart Detection** | Automatically finds `llms.txt`, `llms-full.txt`, and `install.md` |
+| 📄 **Organized Output** | Splits content into individual markdown files by section |
+| 🤖 **Agent-Ready** | Includes `AGENT-GUIDE.md` optimized for AI assistants |
+| 📦 **Multiple Formats** | Export as Markdown, JSON, YAML, or ZIP archive |
+| 🔌 **MCP Server** | Integrate with Claude Desktop, Cursor, and more |
+| ⚡ **Batch Processing** | Process multiple URLs simultaneously |
+| 📚 **Site Directory** | Browse 19+ curated llms.txt-enabled websites |
+| ✏️ **llms.txt Generator** | Create your own llms.txt files with a guided wizard |
+| 🚀 **install.md Generator** | AI-powered: generate from GitHub repos, docs URLs, or manually |
 
-## Use Cases
+---
 
-- Feed documentation to AI coding assistants (Cursor, Windsurf, Claude, GPT)
-- Build context-aware AI agents with up-to-date docs
-- Create documentation pipelines for RAG systems
-- Automate documentation aggregation across multiple sources
-- Generate llms.txt files for your own projects
-- **Create install.md files for autonomous AI installation**
+## 🎯 Use Cases
 
-## Documentation
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│   📝 Feed docs to AI coding assistants (Cursor, Windsurf)      │
+│   🤖 Build context-aware AI agents with up-to-date docs        │
+│   🔄 Create documentation pipelines for RAG systems            │
+│   📦 Aggregate docs from multiple sources automatically        │
+│   ✏️  Generate llms.txt/install.md for your own projects       │
+│   🚀 Auto-generate install.md from any GitHub repo             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-Full documentation is available at **https://llm.energy/docs/**
+---
 
-## Installation
+## 🚀 install.md Generator
+
+Generate LLM-executable installation instructions from any source:
+
+| Mode | Description | Use Case |
+|------|-------------|----------|
+| **From GitHub** | Analyze any public GitHub repo and generate install.md | Perfect for creating install.md for existing projects |
+| **From URL** | Extract from any documentation page | Convert existing docs to install.md format |
+| **Manual** | Build from scratch with guided wizard | Full control over every detail |
+
+### How It Works
+
+1. **GitHub Mode**: Analyzes README, package.json/pyproject.toml/Cargo.toml, GitHub Actions, and releases
+2. **URL Mode**: Scrapes documentation pages, detects platforms (Mintlify, Docusaurus, GitBook, etc.)
+3. **AI Synthesis**: Uses Claude to generate a properly formatted install.md
+
+### Quick Example
+
+```bash
+# Generate install.md for any GitHub project
+curl -X POST https://llm.energy/api/generate-install \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://github.com/anthropics/anthropic-sdk-python", "type": "github"}'
+```
+
+Visit **[llm.energy/install-generator](https://llm.energy/install-generator)** to use the web interface.
+
+---
+
+## 📚 Documentation
+
+Full documentation is available at **[llm.energy/docs](https://llm.energy/docs/)**
+
+---
+
+## 🚀 Installation
 
 ### Web Application
 
-Visit https://llm.energy to use the hosted version.
+Visit [llm.energy](https://llm.energy) to use the hosted version.
 
 ### Local Development
 
 ```bash
+# Clone the repository
 git clone https://github.com/nirholas/extract-llms-docs.git
 cd extract-llms-docs
+
+# Install dependencies
 pnpm install
+
+# Start development server
 pnpm dev
 ```
 
-The application runs on http://localhost:3001
+🌐 The application runs on **http://localhost:3001**
 
 ### MCP Server
+
+<details>
+<summary>📦 <strong>Click to expand MCP Server setup</strong></summary>
 
 Add to your MCP client configuration (Claude Desktop, Cursor, etc.):
 
@@ -70,185 +152,272 @@ Add to your MCP client configuration (Claude Desktop, Cursor, etc.):
 }
 ```
 
-## API Reference
+See [MCP Server Documentation](https://llm.energy/docs/mcp-server/installation/) for detailed setup.
 
-### Extract Documentation
+</details>
+
+---
+
+## 🔌 API Reference
+
+<details>
+<summary><strong>POST /api/extract</strong> - Extract documentation from a URL</summary>
 
 ```bash
-POST /api/extract
-Content-Type: application/json
-
-{
-  "url": "https://docs.example.com"
-}
+curl -X POST https://llm.energy/api/extract \
+  -H "Content-Type: application/json" \
+  -d '{"url": "docs.anthropic.com"}'
 ```
 
 Response includes parsed sections, metadata, and download URLs.
 
-### Validate URL
+</details>
+
+<details>
+<summary><strong>POST /api/validate</strong> - Check if URL has llms.txt support</summary>
 
 ```bash
-POST /api/validate
-Content-Type: application/json
-
-{
-  "url": "https://docs.example.com"
-}
+curl -X POST https://llm.energy/api/validate \
+  -H "Content-Type: application/json" \
+  -d '{"url": "docs.example.com"}'
 ```
 
-Checks if a URL has llms.txt support before extraction.
+</details>
 
-### Validate install.md
+<details>
+<summary><strong>POST /api/batch</strong> - Process multiple URLs</summary>
 
 ```bash
-GET /api/validate-install?url={url}
+curl -X POST https://llm.energy/api/batch \
+  -H "Content-Type: application/json" \
+  -d '{"urls": ["docs.anthropic.com", "docs.stripe.com"]}'
 ```
 
-Checks if a URL has an install.md file available.
+</details>
+
+<details>
+<summary><strong>GET /api/download</strong> - Download in various formats</summary>
 
 ```bash
-POST /api/validate-install
-Content-Type: application/json
-
-{
-  "content": "# my-product\n\n> Description...\n\nOBJECTIVE: Install the product..."
-}
+# Formats: markdown, json, yaml, zip
+curl "https://llm.energy/api/download?url=docs.anthropic.com&format=zip"
 ```
 
-Validates install.md content against the specification.
+</details>
 
-### Batch Processing
+<details>
+<summary><strong>POST /api/generate-install</strong> - AI-generate install.md from GitHub or docs URL</summary>
 
 ```bash
-POST /api/batch
-Content-Type: application/json
+# Generate from a GitHub repository
+curl -X POST https://llm.energy/api/generate-install \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://github.com/anthropics/anthropic-sdk-python", "type": "github"}'
 
-{
-  "urls": [
-    "https://docs.anthropic.com",
-    "https://docs.stripe.com",
-    "https://vercel.com"
-  ]
-}
+# Generate from a documentation URL
+curl -X POST https://llm.energy/api/generate-install \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://docs.anthropic.com/en/docs/quickstart", "type": "docs"}'
+
+# Analyze only (preview mode)
+curl "https://llm.energy/api/generate-install?url=https://github.com/anthropics/anthropic-sdk-python&type=github"
 ```
 
-Process multiple documentation sources in a single request.
+</details>
 
-### Download Formats
+📖 **[Full API Reference →](https://llm.energy/docs/api-reference/)**
 
-```bash
-GET /api/download?url={url}&format={format}
-```
+---
 
-Formats: markdown, json, yaml, zip
-
-## MCP Server Tools
+## 🤖 MCP Server Tools
 
 The MCP server exposes the following tools for AI agents:
 
 | Tool | Description |
 |------|-------------|
-| extract_docs | Extract documentation from a URL with llms.txt support |
-| validate_url | Check if a URL has llms.txt available |
-| list_sites | Get directory of known llms.txt-enabled sites |
-| search_sites | Search the site directory by category or keyword |
+| `extract_docs` | Extract documentation from a URL with llms.txt support |
+| `validate_url` | Check if a URL has llms.txt available |
+| `verify_llms_txt` | Verify llms.txt exists and get file info |
+| `discover_documentation_urls` | Find documentation URLs for a domain |
+| `list_sites` | Get directory of known llms.txt-enabled sites |
+| `search_sites` | Search the site directory by category or keyword |
 
-## Project Structure
+---
+
+## 🏗️ Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                        llm.energy                                │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐              │
+│  │   Web App   │  │  REST API   │  │ MCP Server  │              │
+│  │  (Next.js)  │  │  /api/*     │  │   (stdio)   │              │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘              │
+│         │                │                │                      │
+│         └────────────────┼────────────────┘                      │
+│                          │                                       │
+│                   ┌──────▼──────┐                                │
+│                   │    Core     │                                │
+│                   │  - Parser   │                                │
+│                   │  - Extractor│                                │
+│                   │  - Cache    │                                │
+│                   └──────┬──────┘                                │
+│                          │                                       │
+│         ┌────────────────┼────────────────┐                      │
+│         ▼                ▼                ▼                      │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐              │
+│  │  llms.txt   │  │ install.md  │  │   Sitemap   │              │
+│  └─────────────┘  └─────────────┘  └─────────────┘              │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+<details>
+<summary>📁 <strong>Project Structure</strong></summary>
 
 ```
 extract-llms-docs/
-  src/
-    app/              Next.js pages and API routes
-      api/            REST API endpoints
-      extract/        Extraction interface
-      batch/          Batch processing page
-      directory/      Site directory browser
-      generator/      llms.txt generator wizard
-      install-generator/  install.md generator wizard
-    components/       React UI components
-    lib/              Core utilities
-      parser.ts       llms.txt parser
-      extractor.ts    Content extraction
-      install-md-parser.ts    install.md parser
-      install-md-generator.ts install.md generator
-      cache.ts        Response caching
-      rate-limiter.ts
-    hooks/            React hooks
-    types/            TypeScript definitions
-    data/             Site directory data
-  packages/
-    core/             Shared parser and types
-  mcp-server/         MCP server package
-  public/
-    docs/             Documentation site
-  docs-site/          MkDocs source
+├── src/
+│   ├── app/              # Next.js pages and API routes
+│   │   ├── api/          # REST API endpoints
+│   │   │   ├── extract/  # Documentation extraction API
+│   │   │   ├── generate-install/  # AI-powered install.md generation
+│   │   │   └── ...       # Other API endpoints
+│   │   ├── extract/      # Extraction interface
+│   │   ├── batch/        # Batch processing page
+│   │   ├── directory/    # Site directory browser
+│   │   ├── generator/    # llms.txt generator wizard
+│   │   └── install-generator/  # install.md generator with tabs
+│   ├── components/       # React UI components
+│   │   └── install-generator/  # GitHubTab, UrlTab, Preview
+│   ├── lib/              # Core utilities
+│   │   ├── github-analyzer.ts  # GitHub repo analysis
+│   │   ├── docs-analyzer.ts    # Documentation URL scraping
+│   │   └── ...           # Parser, extractor, cache
+│   ├── hooks/            # React hooks
+│   └── types/            # TypeScript definitions
+├── packages/core/        # Shared parser and types
+├── mcp-server/           # MCP server package
+└── docs-site/            # MkDocs documentation source
 ```
 
-## Technology Stack
+</details>
 
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- Framer Motion
-- Model Context Protocol SDK
-- Vitest for testing
+---
 
-## Configuration
+## 🛠️ Technology Stack
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Framer-Motion-purple?logo=framer" alt="Framer Motion" />
+  <img src="https://img.shields.io/badge/MCP-SDK-green" alt="MCP SDK" />
+  <img src="https://img.shields.io/badge/Vitest-Testing-yellow?logo=vitest" alt="Vitest" />
+</p>
+
+---
+
+## ⚙️ Configuration
 
 Environment variables (optional):
 
 ```bash
-RATE_LIMIT_REQUESTS=100
-RATE_LIMIT_WINDOW_MS=60000
-CACHE_TTL=3600
+RATE_LIMIT_REQUESTS=100     # Max requests per window
+RATE_LIMIT_WINDOW_MS=60000  # Window duration in ms
+CACHE_TTL=3600              # Cache time-to-live in seconds
+ADMIN_KEY=your-secret-key   # Admin API key (required for cache management)
 ```
 
-## Development Commands
+---
+
+## 💻 Development
 
 ```bash
-pnpm dev          # Start development server
-pnpm build        # Production build
-pnpm start        # Start production server
-pnpm test         # Run tests
-pnpm test:coverage # Tests with coverage report
-pnpm typecheck    # TypeScript validation
-pnpm lint         # ESLint check
+pnpm dev          # 🚀 Start development server
+pnpm build        # 📦 Production build
+pnpm start        # ▶️  Start production server
+pnpm test         # 🧪 Run tests (163 tests)
+pnpm test:coverage # 📊 Tests with coverage report
+pnpm typecheck    # ✅ TypeScript validation
+pnpm lint         # 🔍 ESLint check
 ```
 
-## Related Standards and Projects
+---
 
-- llms.txt Standard: https://llmstxt.org
-- Model Context Protocol: https://modelcontextprotocol.io
-- MCP Servers Directory: https://github.com/modelcontextprotocol/servers
+## 🔗 Related Projects
 
-## Sites with llms.txt Support
+| Project | Description |
+|---------|-------------|
+| [llms.txt Standard](https://llmstxt.org) | Machine-readable documentation format |
+| [install.md Standard](https://installmd.org) | LLM-executable installation format |
+| [Model Context Protocol](https://modelcontextprotocol.io) | Protocol for AI tool integration |
+| [MCP Servers Directory](https://github.com/modelcontextprotocol/servers) | Community MCP servers |
 
-The application includes a directory of websites known to support llms.txt:
+---
 
-- Anthropic Documentation
-- Vercel Documentation
-- Stripe API Reference
-- Supabase Docs
-- Mintlify Documentation
+## 🌐 Sites with llms.txt Support
 
-Browse the full directory at https://llm.energy/directory
+Browse **19+ curated websites** with verified llms.txt support at [llm.energy/directory](https://llm.energy/directory)
 
-## Contributing
+Featured sites include:
+- 🤖 Anthropic Documentation
+- ⚡ Vercel Documentation  
+- 💳 Stripe API Reference
+- 🗄️ Supabase Docs
+- 📘 Mintlify Documentation
+- ...and more!
 
-Contributions welcome. Please open an issue to discuss changes before submitting a pull request.
+---
 
-To add a site to the directory, edit src/data/sites.ts and submit a PR.
+## 🤝 Contributing
 
-## License
+Contributions are welcome! Please follow these steps:
 
-MIT License
+1. 🍴 Fork the repository
+2. 🌿 Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. 💾 Commit your changes (`git commit -m 'Add amazing feature'`)
+4. 📤 Push to the branch (`git push origin feature/amazing-feature`)
+5. 🔀 Open a Pull Request
 
-## Links
+**Adding a site to the directory?** Edit [src/data/sites.ts](src/data/sites.ts) and submit a PR.
 
-- Website: https://llm.energy
-- Documentation: https://llm.energy/docs
-- GitHub: https://github.com/nirholas/extract-llms-docs
-- MCP Server: https://www.npmjs.com/package/@llm-energy/mcp-server
+---
+
+## 📄 License
+
+**MIT License** - see [LICENSE](LICENSE) for details
+
+---
+
+## 🔗 Links
+
+<p align="center">
+  <a href="https://llm.energy">🌐 Website</a> •
+  <a href="https://llm.energy/docs">📚 Documentation</a> •
+  <a href="https://github.com/nirholas/extract-llms-docs">💻 GitHub</a> •
+  <a href="https://www.npmjs.com/package/@llm-energy/mcp-server">📦 NPM</a>
+</p>
+
+---
+
+## 👤 Author
+
+**Built by nich**
+
+<p align="center">
+  <a href="https://x.com/nichxbt">
+    <img src="https://img.shields.io/badge/Twitter-@nichxbt-1DA1F2?logo=twitter&logoColor=white" alt="Twitter" />
+  </a>
+</p>
+
+---
+
+<p align="center">
+  <sub>Made with ⚡ for the AI community</sub>
+</p>
 
 ## Author
 

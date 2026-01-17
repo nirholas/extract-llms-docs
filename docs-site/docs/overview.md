@@ -2,6 +2,9 @@
 
 How llm.energy works.
 
+!!! tip "Quick Start"
+    Visit [llm.energy](https://llm.energy) and enter any documentation URL to get started immediately!
+
 ---
 
 ## Supported Standards
@@ -48,12 +51,13 @@ flowchart LR
 
 ### 1. Fetch
 
-llm.energy fetches:
-
-1. `{url}/llms-full.txt` (complete documentation)
-2. Falls back to `{url}/llms.txt` if full version unavailable
-3. `{url}/install.md` (installation instructions)
-4. Also checks `/docs/install.md` and `docs.{domain}/install.md`
+!!! example "Fetch Strategy"
+    llm.energy intelligently searches multiple locations:
+    
+    1. `{url}/llms-full.txt` (complete documentation)
+    2. Falls back to `{url}/llms.txt` if full version unavailable
+    3. `{url}/install.md` (installation instructions)
+    4. Also checks `/docs/install.md` and `docs.{domain}/install.md`
 
 ### 2. Parse
 
@@ -62,6 +66,9 @@ Content is split into sections based on markdown headers:
 - `##` headers become document boundaries
 - Each section becomes its own `.md` file
 - Filenames are generated from section titles
+
+!!! note "Smart Parsing"
+    The parser preserves code blocks, tables, and formatting while intelligently splitting content.
 
 ### 3. Generate
 
@@ -73,6 +80,9 @@ Four types of output:
 | `llms-full.md` | Consolidated document with TOC |
 | `AGENT-GUIDE.md` | Instructions for AI assistants |
 | `install.md` | Installation instructions (if available) |
+
+!!! success "Ready for AI"
+    All output files are optimized for AI consumption with clear structure and metadata.
 
 ---
 
