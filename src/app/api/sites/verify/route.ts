@@ -265,11 +265,16 @@ export async function POST(request: NextRequest) {
   const rateLimitResult = rateLimiter.checkAndRecord(clientIp)
   
   if (!rateLimitResult.allowed) {
+    const headers = rateLimiter.getHeaders(rateLimitResult)
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
       { 
         status: 429,
-        headers: rateLimiter.getHeaders(rateLimitResult),
+        headers: {
+          'X-RateLimit-Limit': headers['X-RateLimit-Limit'],
+          'X-RateLimit-Remaining': headers['X-RateLimit-Remaining'],
+          'X-RateLimit-Reset': headers['X-RateLimit-Reset'],
+        },
       }
     )
   }

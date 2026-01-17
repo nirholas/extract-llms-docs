@@ -1,19 +1,36 @@
 /**
- * Intelligent URL Discovery System
+ * Ultra-Intelligent URL Discovery System
  * 
- * A comprehensive, multi-strategy approach to finding llms.txt files.
- * Uses multiple discovery methods in parallel for maximum coverage:
+ * A comprehensive, multi-strategy approach to finding llms.txt files for ANY website.
+ * Combines 15+ discovery strategies to maximize success rate:
  * 
- * 1. Direct URL patterns (subdomains, paths)
- * 2. robots.txt parsing
- * 3. Sitemap.xml analysis
- * 4. Homepage link scraping
- * 5. Meta tag analysis
- * 6. Well-known paths
- * 7. Common doc platform detection
- * 8. GitHub/GitLab repository checking
- * 9. OpenAPI/Swagger detection
- * 10. DNS-based subdomain discovery
+ * PHASE 1 - Quick Checks:
+ * 1. Well-known paths (.well-known/llms.txt, /llms.txt)
+ * 2. User-provided URL direct check
+ * 
+ * PHASE 2 - Pattern Generation:
+ * 3. Subdomain patterns (50+ common doc subdomains)
+ * 4. Path patterns (30+ common doc paths)
+ * 5. External doc platform subdomains (gitbook, readme, notion)
+ * 
+ * PHASE 3 - Deep Analysis:
+ * 6. Homepage HTML analysis (links, nav menus, footers)
+ * 7. Link text analysis (finds "Docs", "API", "Documentation" links)
+ * 8. Meta tag extraction (og:site_name, canonical URLs)
+ * 9. JSON-LD structured data parsing
+ * 10. robots.txt parsing (sitemaps, allowed paths)
+ * 11. Sitemap.xml deep analysis
+ * 
+ * PHASE 4 - Platform Detection:
+ * 12. Documentation platform fingerprinting (15+ platforms)
+ * 13. API documentation framework detection (Swagger, Redoc, Stoplight)
+ * 14. GitHub/GitLab repository discovery
+ * 15. External hosted docs detection (GitBook, ReadMe, Notion sites)
+ * 
+ * PHASE 5 - Advanced:
+ * 16. Deep link crawling on promising paths
+ * 17. Common naming convention matching
+ * 18. Redirect following and final URL analysis
  */
 
 // ============================================================================
@@ -34,6 +51,8 @@ export interface DiscoveryResult {
     sitemapFound?: boolean
     robotsTxtFound?: boolean
     githubRepo?: string
+    externalDocsUrl?: string
+    detectedFramework?: string
   }
 }
 
@@ -43,6 +62,7 @@ export interface DiscoveryProgress {
   totalToScan: number
   status: 'scanning' | 'found' | 'not-found' | 'error'
   currentStrategy?: string
+  phase?: string
 }
 
 interface LlmsTxtCheckResult {
@@ -56,140 +76,205 @@ interface DiscoveredUrl {
   url: string
   priority: number  // Lower = higher priority
   source: string
+  metadata?: Record<string, string>
 }
 
 // ============================================================================
-// Configuration
+// Configuration - Comprehensive patterns for ANY website
 // ============================================================================
 
 const CONFIG = {
   // Timeout settings
-  defaultTimeoutMs: 30000,
-  perRequestTimeoutMs: 5000,
+  defaultTimeoutMs: 45000,  // Increased for thorough scanning
+  perRequestTimeoutMs: 6000,
   
   // Batch processing
-  batchSize: 8,
-  maxUrlsToScan: 100,
+  batchSize: 10,
+  maxUrlsToScan: 150,
   
-  // Common documentation subdomains (ordered by likelihood)
+  // Common documentation subdomains (50+ patterns, ordered by likelihood)
   subdomains: [
-    'docs',
-    'api-docs',
-    'documentation',
-    'developers',
-    'developer',
-    'dev',
-    'api',
-    'reference',
-    'help',
-    'support',
-    'learn',
-    'guide',
-    'guides',
-    'wiki',
-    'kb',
-    'knowledge',
-    'manual',
-    'handbook',
-    'resources',
-    'devdocs',
-    'apidocs',
-    'dev-docs',
-    'api-reference',
-    'portal',
-    'devportal',
-    'dev-portal',
-    'platform',
-    'openapi',
-    'swagger',
-    'spec',
-    'specs',
+    // Most common
+    'docs', 'doc', 'documentation',
+    'api', 'api-docs', 'apidocs', 'api-reference',
+    'developers', 'developer', 'dev',
+    // Secondary common
+    'reference', 'ref',
+    'help', 'support', 'faq',
+    'learn', 'learning', 'education',
+    'guide', 'guides', 'tutorial', 'tutorials',
+    'wiki', 'kb', 'knowledge', 'knowledgebase',
+    // Technical
+    'devdocs', 'dev-docs', 'devportal', 'dev-portal', 'portal',
+    'platform', 'console', 'dashboard',
+    'openapi', 'swagger', 'spec', 'specs', 'schema',
+    // Enterprise/Product
+    'manual', 'handbook', 'resources',
+    'community', 'forum', 'discuss',
+    'status', 'changelog', 'releases',
+    // Versioned
+    'v1', 'v2', 'v3', 'latest', 'stable', 'beta',
+    // Internationalized
+    'en', 'www',
   ],
   
-  // Common documentation paths (ordered by likelihood)
+  // Common documentation paths (30+ patterns)
   docPaths: [
-    '/docs',
-    '/documentation',
-    '/api',
-    '/api-docs',
-    '/developer',
-    '/developers',
-    '/reference',
-    '/help',
-    '/guide',
-    '/guides',
-    '/learn',
-    '/manual',
-    '/handbook',
-    '/resources',
-    '/wiki',
-    '/kb',
-    '/knowledge-base',
-    '/support',
-    '/getting-started',
-    '/quickstart',
-    '/tutorials',
-    '/examples',
-    '/api-reference',
-    '/openapi',
-    '/swagger',
+    // Root doc paths
+    '/docs', '/doc', '/documentation',
+    '/api', '/api-docs', '/api-reference', '/reference',
+    '/developers', '/developer', '/dev',
+    // Help & Support
+    '/help', '/support', '/faq', '/faqs',
+    '/guide', '/guides', '/tutorial', '/tutorials',
+    '/learn', '/learning', '/getting-started', '/quickstart',
+    // Technical
+    '/manual', '/handbook', '/resources', '/wiki', '/kb',
+    '/openapi', '/swagger', '/redoc', '/api-explorer',
+    // Versioned paths
+    '/v1/docs', '/v2/docs', '/v3/docs',
+    '/latest', '/stable', '/current',
+    // Nested common patterns
+    '/en/docs', '/en-us/docs',
+    '/api/v1', '/api/v2', '/api/v3',
   ],
   
-  // Well-known paths to check
+  // Well-known paths to check first
   wellKnownPaths: [
     '/.well-known/llms.txt',
     '/.well-known/llms-full.txt',
     '/llms.txt',
     '/llms-full.txt',
+    '/docs/llms.txt',
+    '/api/llms.txt',
   ],
   
-  // Common documentation platforms and their patterns
-  docPlatforms: {
+  // External documentation hosting platforms
+  externalDocPlatforms: {
     gitbook: {
-      indicators: ['gitbook.io', 'gitbook.com', 'x-gitbook'],
+      // GitBook hosted docs: {name}.gitbook.io or custom domain
+      subdomainPatterns: ['.gitbook.io', '.gitbook.com'],
+      indicators: ['x-gitbook', 'gitbook', 'powered by gitbook'],
       llmsPaths: ['/llms.txt', '/llms-full.txt'],
     },
     readme: {
-      indicators: ['readme.io', 'readme.com', 'x-readme'],
-      llmsPaths: ['/llms.txt', '/llms-full.txt'],
+      // ReadMe hosted docs: {name}.readme.io
+      subdomainPatterns: ['.readme.io', '.readme.com'],
+      indicators: ['x-readme', 'readme.io', 'powered by readme'],
+      llmsPaths: ['/llms.txt', '/llms-full.txt', '/reference/llms.txt'],
+    },
+    notion: {
+      // Notion sites: {name}.notion.site
+      subdomainPatterns: ['.notion.site', '.notion.so'],
+      indicators: ['notion.site', 'notion-static'],
+      llmsPaths: ['/llms.txt'],
     },
     mintlify: {
-      indicators: ['mintlify.', 'x-mintlify'],
+      // Mintlify hosted docs
+      subdomainPatterns: ['.mintlify.app', '.mintlify.dev'],
+      indicators: ['mintlify', 'x-mintlify'],
       llmsPaths: ['/llms.txt', '/llms-full.txt'],
     },
     docusaurus: {
-      indicators: ['docusaurus', '__docusaurus'],
+      indicators: ['docusaurus', '__docusaurus', 'docsearch'],
       llmsPaths: ['/llms.txt', '/docs/llms.txt'],
     },
-    notion: {
-      indicators: ['notion.site', 'notion.so'],
-      llmsPaths: ['/llms.txt'],
-    },
-    confluence: {
-      indicators: ['confluence', 'atlassian.net'],
-      llmsPaths: ['/llms.txt'],
-    },
     vitepress: {
-      indicators: ['vitepress', '.vitepress'],
+      indicators: ['vitepress', '.vitepress', 'vp-doc'],
       llmsPaths: ['/llms.txt', '/guide/llms.txt'],
     },
     docsify: {
       indicators: ['docsify', 'window.$docsify'],
-      llmsPaths: ['/llms.txt', '/#/llms.txt'],
+      llmsPaths: ['/llms.txt'],
     },
     mkdocs: {
-      indicators: ['mkdocs', 'material for mkdocs'],
+      indicators: ['mkdocs', 'material for mkdocs', 'mike/'],
       llmsPaths: ['/llms.txt', '/llms-full.txt'],
     },
     sphinx: {
-      indicators: ['sphinx', 'readthedocs'],
+      indicators: ['sphinx', 'alabaster', '_sphinx_javascript_frameworks_compat'],
       llmsPaths: ['/llms.txt', '/_static/llms.txt'],
     },
     readthedocs: {
-      indicators: ['readthedocs.io', 'readthedocs.org'],
+      subdomainPatterns: ['.readthedocs.io', '.readthedocs.org', '.rtfd.io'],
+      indicators: ['readthedocs', 'rtd-'],
       llmsPaths: ['/llms.txt', '/en/latest/llms.txt', '/en/stable/llms.txt'],
     },
+    confluence: {
+      subdomainPatterns: ['.atlassian.net'],
+      indicators: ['confluence', 'atlassian'],
+      llmsPaths: ['/llms.txt'],
+    },
+    zendesk: {
+      subdomainPatterns: ['.zendesk.com'],
+      indicators: ['zendesk', 'zd-'],
+      llmsPaths: ['/llms.txt', '/hc/llms.txt'],
+    },
+    intercom: {
+      subdomainPatterns: ['.intercom.help'],
+      indicators: ['intercom'],
+      llmsPaths: ['/llms.txt'],
+    },
+    helpscout: {
+      subdomainPatterns: ['.helpscoutdocs.com'],
+      indicators: ['help scout', 'helpscout'],
+      llmsPaths: ['/llms.txt'],
+    },
+    gitiles: {
+      indicators: ['gitiles'],
+      llmsPaths: ['/+/HEAD/llms.txt', '/llms.txt'],
+    },
   },
+  
+  // API documentation frameworks
+  apiDocFrameworks: {
+    swagger: {
+      indicators: ['swagger-ui', 'swagger.json', 'swagger.yaml'],
+      paths: ['/swagger', '/swagger-ui', '/api-docs', '/swagger.json'],
+    },
+    redoc: {
+      indicators: ['redoc', 'redocly'],
+      paths: ['/redoc', '/api-docs', '/docs/api'],
+    },
+    stoplight: {
+      indicators: ['stoplight', 'elements-api'],
+      paths: ['/docs', '/api-reference'],
+    },
+    rapidoc: {
+      indicators: ['rapi-doc', 'rapidoc'],
+      paths: ['/docs', '/api'],
+    },
+    scalar: {
+      indicators: ['scalar', '@scalar/api-reference'],
+      paths: ['/reference', '/docs'],
+    },
+    slate: {
+      indicators: ['slate', 'tocify'],
+      paths: ['/docs', '/api'],
+    },
+  },
+  
+  // Link text patterns that indicate documentation
+  docLinkTextPatterns: [
+    /docs?/i,
+    /documentation/i,
+    /api\s*(?:reference|docs?)?/i,
+    /developers?/i,
+    /reference/i,
+    /guide/i,
+    /tutorial/i,
+    /learn/i,
+    /getting\s*started/i,
+    /quickstart/i,
+    /manual/i,
+    /handbook/i,
+    /wiki/i,
+    /help(?:\s*center)?/i,
+    /support/i,
+    /knowledge\s*base/i,
+    /faq/i,
+    /resources/i,
+  ],
   
   // User agent for requests
   userAgent: 'llms-forge/1.0 (Intelligent Documentation Discovery; +https://llm.energy)',
@@ -738,15 +823,17 @@ async function detectDocPlatform(inputUrl: string): Promise<{
       const headersStr = JSON.stringify(headers).toLowerCase()
       
       // Check each platform
-      for (const [platform, config] of Object.entries(CONFIG.docPlatforms)) {
-        const isMatch = config.indicators.some(indicator => 
+      for (const [platform, config] of Object.entries(CONFIG.externalDocPlatforms)) {
+        const indicators = config.indicators || []
+        const isMatch = indicators.some(indicator => 
           html.includes(indicator.toLowerCase()) || 
           headersStr.includes(indicator.toLowerCase())
         )
         
         if (isMatch) {
           // Add platform-specific paths
-          for (const path of config.llmsPaths) {
+          const llmsPaths = config.llmsPaths || ['/llms.txt', '/llms-full.txt']
+          for (const path of llmsPaths) {
             urls.push({
               url: `${pageUrl}${path}`,
               priority: 5,
@@ -891,21 +978,429 @@ async function checkOpenApiEndpoints(inputUrl: string): Promise<DiscoveredUrl[]>
 }
 
 // ============================================================================
-// Main Discovery Function
+// Strategy 8: External Documentation Platform Discovery
 // ============================================================================
+
+async function discoverExternalDocPlatforms(inputUrl: string): Promise<{
+  externalUrl: string | null
+  urls: DiscoveredUrl[]
+}> {
+  const urls: DiscoveredUrl[] = []
+  const parsed = parseUrl(inputUrl)
+  
+  if (!parsed) return { externalUrl: null, urls }
+  
+  const { baseDomain, fullDomain } = parsed
+  
+  // Check common external doc hosting patterns
+  const externalPatterns = [
+    // GitBook
+    { host: `${baseDomain}.gitbook.io`, platform: 'gitbook' },
+    { host: `docs-${baseDomain}.gitbook.io`, platform: 'gitbook' },
+    // ReadMe
+    { host: `${baseDomain}.readme.io`, platform: 'readme' },
+    // Notion
+    { host: `${baseDomain}.notion.site`, platform: 'notion' },
+    // ReadTheDocs
+    { host: `${baseDomain}.readthedocs.io`, platform: 'readthedocs' },
+    { host: `${baseDomain}.rtfd.io`, platform: 'readthedocs' },
+    // Mintlify
+    { host: `docs.${fullDomain}`, platform: 'mintlify' },  // Often Mintlify
+    // Zendesk
+    { host: `${baseDomain}.zendesk.com`, platform: 'zendesk' },
+    { host: `support.${fullDomain}`, platform: 'zendesk' },
+    // Intercom
+    { host: `${baseDomain}.intercom.help`, platform: 'intercom' },
+    // Help Scout
+    { host: `${baseDomain}.helpscoutdocs.com`, platform: 'helpscout' },
+  ]
+  
+  for (const { host, platform } of externalPatterns) {
+    const testUrl = `https://${host}`
+    try {
+      const response = await fetchWithTimeout(testUrl, { method: 'HEAD' }, 3000)
+      if (response.ok) {
+        const config = CONFIG.externalDocPlatforms[platform as keyof typeof CONFIG.externalDocPlatforms]
+        if (config && config.llmsPaths) {
+          for (const path of config.llmsPaths) {
+            urls.push({
+              url: `${testUrl}${path}`,
+              priority: 3,  // High priority - external doc platforms often have llms.txt
+              source: `external-${platform}`,
+            })
+          }
+        }
+        return { externalUrl: testUrl, urls }
+      }
+    } catch {
+      // Continue
+    }
+  }
+  
+  return { externalUrl: null, urls }
+}
+
+// ============================================================================
+// Strategy 9: Deep Link Text Analysis
+// ============================================================================
+
+async function analyzeLinksWithText(inputUrl: string): Promise<DiscoveredUrl[]> {
+  const urls: DiscoveredUrl[] = []
+  const parsed = parseUrl(inputUrl)
+  
+  if (!parsed) return urls
+  
+  try {
+    const response = await fetchWithTimeout(`${parsed.protocol}//${parsed.hostname}`, {
+      headers: { 'Accept': 'text/html' },
+    })
+    
+    if (!response.ok) return urls
+    
+    const html = await response.text()
+    
+    // Find links with documentation-related text
+    // Pattern: <a href="URL">TEXT</a> where TEXT matches doc patterns
+    const linkWithTextPattern = /<a[^>]*href=["']([^"']+)["'][^>]*>([^<]*)<\/a>/gi
+    const matches = Array.from(html.matchAll(linkWithTextPattern))
+    
+    for (const match of matches) {
+      const [, href, linkText] = match
+      if (!href || !linkText) continue
+      
+      // Check if link text matches documentation patterns
+      const isDocLink = CONFIG.docLinkTextPatterns.some(pattern => pattern.test(linkText.trim()))
+      
+      if (isDocLink) {
+        let fullUrl = href
+        
+        // Convert relative URLs
+        if (href.startsWith('/')) {
+          fullUrl = `${parsed.protocol}//${parsed.hostname}${href}`
+        } else if (!href.startsWith('http')) {
+          continue
+        }
+        
+        try {
+          const urlObj = new URL(fullUrl)
+          // Accept same domain, subdomains, or known doc platforms
+          const host = urlObj.hostname
+          if (
+            host.includes(parsed.baseDomain) ||
+            /gitbook|readme|notion|mintlify|readthedocs|zendesk|intercom|helpscout/.test(host)
+          ) {
+            urls.push({
+              url: fullUrl.replace(/\/$/, ''),
+              priority: 8,  // High priority - explicit doc links
+              source: 'link-text-analysis',
+              metadata: { linkText: linkText.trim().slice(0, 50) },
+            })
+          }
+        } catch {
+          continue
+        }
+      }
+    }
+    
+    // Also check for header/nav elements specifically
+    const navPatterns = [
+      /<nav[^>]*>([\s\S]*?)<\/nav>/gi,
+      /<header[^>]*>([\s\S]*?)<\/header>/gi,
+      /class=["'][^"']*(?:nav|menu|header)[^"']*["'][^>]*>([\s\S]*?)<\/(?:div|ul|nav)>/gi,
+    ]
+    
+    for (const navPattern of navPatterns) {
+      const navMatches = Array.from(html.matchAll(navPattern))
+      for (const navMatch of navMatches) {
+        const navContent = navMatch[1] || navMatch[0]
+        const navLinks = Array.from(navContent.matchAll(/<a[^>]*href=["']([^"']+)["'][^>]*>([^<]*)<\/a>/gi))
+        
+        for (const [, href, text] of navLinks) {
+          if (!href || !text) continue
+          
+          const isDocLink = CONFIG.docLinkTextPatterns.some(pattern => pattern.test(text.trim()))
+          if (isDocLink) {
+            let fullUrl = href
+            if (href.startsWith('/')) {
+              fullUrl = `${parsed.protocol}//${parsed.hostname}${href}`
+            } else if (!href.startsWith('http')) {
+              continue
+            }
+            
+            try {
+              new URL(fullUrl)
+              urls.push({
+                url: fullUrl.replace(/\/$/, ''),
+                priority: 5,  // Very high priority - nav links are primary
+                source: 'nav-text-analysis',
+              })
+            } catch {
+              continue
+            }
+          }
+        }
+      }
+    }
+    
+  } catch {
+    // Silently fail
+  }
+  
+  return urls
+}
+
+// ============================================================================
+// Strategy 10: JSON-LD Structured Data Analysis
+// ============================================================================
+
+async function analyzeStructuredData(inputUrl: string): Promise<DiscoveredUrl[]> {
+  const urls: DiscoveredUrl[] = []
+  const parsed = parseUrl(inputUrl)
+  
+  if (!parsed) return urls
+  
+  try {
+    const response = await fetchWithTimeout(`${parsed.protocol}//${parsed.hostname}`, {
+      headers: { 'Accept': 'text/html' },
+    })
+    
+    if (!response.ok) return urls
+    
+    const html = await response.text()
+    
+    // Find JSON-LD scripts
+    const jsonLdMatches = Array.from(html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi))
+    
+    for (const match of jsonLdMatches) {
+      try {
+        const jsonData = JSON.parse(match[1])
+        
+        // Look for documentation-related URLs in structured data
+        const findUrls = (obj: unknown, path: string = ''): void => {
+          if (!obj || typeof obj !== 'object') return
+          
+          if (Array.isArray(obj)) {
+            obj.forEach((item, i) => findUrls(item, `${path}[${i}]`))
+            return
+          }
+          
+          for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
+            if (typeof value === 'string' && value.startsWith('http')) {
+              // Check if this looks like a doc URL
+              if (/docs?|documentation|api|developer|reference|guide|help/i.test(key) ||
+                  /docs?|documentation|api|developer|reference|guide|help/i.test(value)) {
+                urls.push({
+                  url: value,
+                  priority: 12,
+                  source: 'json-ld',
+                  metadata: { key },
+                })
+              }
+            } else if (typeof value === 'object') {
+              findUrls(value, `${path}.${key}`)
+            }
+          }
+        }
+        
+        findUrls(jsonData)
+      } catch {
+        // Invalid JSON, skip
+      }
+    }
+  } catch {
+    // Silently fail
+  }
+  
+  return urls
+}
+
+// ============================================================================
+// Strategy 11: API Documentation Framework Detection
+// ============================================================================
+
+async function detectApiDocFramework(inputUrl: string): Promise<{
+  framework: string | null
+  urls: DiscoveredUrl[]
+}> {
+  const urls: DiscoveredUrl[] = []
+  const parsed = parseUrl(inputUrl)
+  
+  if (!parsed) return { framework: null, urls }
+  
+  // Check common API doc paths for framework indicators
+  const pathsToCheck = [
+    '',
+    '/docs',
+    '/api-docs',
+    '/api',
+    '/reference',
+    '/swagger',
+    '/redoc',
+  ]
+  
+  const bases = [
+    `${parsed.protocol}//${parsed.hostname}`,
+    `${parsed.protocol}//${parsed.fullDomain}`,
+    `${parsed.protocol}//api.${parsed.fullDomain}`,
+  ]
+  
+  for (const base of Array.from(new Set(bases))) {
+    for (const path of pathsToCheck) {
+      try {
+        const testUrl = `${base}${path}`
+        const response = await fetchWithTimeout(testUrl, {
+          headers: { 'Accept': 'text/html' },
+        }, 3000)
+        
+        if (!response.ok) continue
+        
+        const html = (await response.text()).toLowerCase()
+        
+        // Check each API doc framework
+        for (const [framework, config] of Object.entries(CONFIG.apiDocFrameworks)) {
+          const isMatch = config.indicators.some(ind => html.includes(ind.toLowerCase()))
+          
+          if (isMatch) {
+            // Framework detected - check its specific paths for llms.txt
+            for (const fwPath of config.paths) {
+              urls.push({
+                url: `${base}${fwPath}`,
+                priority: 6,
+                source: `api-framework-${framework}`,
+              })
+            }
+            
+            // Also check main URL
+            urls.push({
+              url: testUrl,
+              priority: 4,
+              source: `api-framework-${framework}`,
+            })
+            
+            return { framework, urls }
+          }
+        }
+      } catch {
+        continue
+      }
+    }
+  }
+  
+  return { framework: null, urls }
+}
+
+// ============================================================================
+// Strategy 12: Footer Link Analysis
+// ============================================================================
+
+async function analyzeFooterLinks(inputUrl: string): Promise<DiscoveredUrl[]> {
+  const urls: DiscoveredUrl[] = []
+  const parsed = parseUrl(inputUrl)
+  
+  if (!parsed) return urls
+  
+  try {
+    const response = await fetchWithTimeout(`${parsed.protocol}//${parsed.hostname}`, {
+      headers: { 'Accept': 'text/html' },
+    })
+    
+    if (!response.ok) return urls
+    
+    const html = await response.text()
+    
+    // Find footer sections
+    const footerPatterns = [
+      /<footer[^>]*>([\s\S]*?)<\/footer>/gi,
+      /class=["'][^"']*footer[^"']*["'][^>]*>([\s\S]*?)<\/div>/gi,
+      /id=["']footer["'][^>]*>([\s\S]*?)<\/div>/gi,
+    ]
+    
+    for (const pattern of footerPatterns) {
+      const footerMatches = Array.from(html.matchAll(pattern))
+      
+      for (const footerMatch of footerMatches) {
+        const footerContent = footerMatch[1] || footerMatch[0]
+        const linkMatches = Array.from(footerContent.matchAll(/href=["']([^"']+)["']/gi))
+        
+        for (const [, href] of linkMatches) {
+          if (!href) continue
+          
+          // Check if URL looks like documentation
+          if (/docs?|api|developer|documentation|reference|guide|help|support/i.test(href)) {
+            let fullUrl = href
+            if (href.startsWith('/')) {
+              fullUrl = `${parsed.protocol}//${parsed.hostname}${href}`
+            } else if (!href.startsWith('http')) {
+              continue
+            }
+            
+            try {
+              new URL(fullUrl)
+              urls.push({
+                url: fullUrl.replace(/\/$/, ''),
+                priority: 18,
+                source: 'footer-link',
+              })
+            } catch {
+              continue
+            }
+          }
+        }
+      }
+    }
+  } catch {
+    // Silently fail
+  }
+  
+  return urls
+}
+
+// ============================================================================
+// Main Discovery Function - Ultra-Comprehensive
+// ============================================================================
+
+type DiscoveryStrategy = 
+  | 'wellknown' 
+  | 'patterns' 
+  | 'platform' 
+  | 'homepage' 
+  | 'robots' 
+  | 'sitemap' 
+  | 'github' 
+  | 'openapi'
+  | 'external'      // External doc platforms (GitBook, ReadMe, etc.)
+  | 'linktext'      // Link text analysis
+  | 'jsonld'        // JSON-LD structured data
+  | 'apiframework'  // API doc framework detection
+  | 'footer'        // Footer link analysis
 
 export async function discoverLlmsTxt(
   inputUrl: string,
   options: {
     timeoutMs?: number
     onProgress?: (progress: DiscoveryProgress) => void
-    strategies?: ('patterns' | 'robots' | 'sitemap' | 'homepage' | 'platform' | 'github' | 'openapi' | 'wellknown')[]
+    strategies?: DiscoveryStrategy[]
   } = {}
 ): Promise<DiscoveryResult> {
   const {
     timeoutMs = CONFIG.defaultTimeoutMs,
     onProgress,
-    strategies = ['wellknown', 'patterns', 'platform', 'homepage', 'robots', 'sitemap', 'github', 'openapi'],
+    // Use ALL strategies by default for maximum intelligence
+    strategies = [
+      'wellknown',
+      'external',
+      'linktext',
+      'patterns',
+      'platform',
+      'apiframework',
+      'homepage',
+      'footer',
+      'jsonld',
+      'robots',
+      'sitemap',
+      'github',
+      'openapi',
+    ],
   } = options
   
   const startTime = Date.now()
@@ -916,8 +1411,13 @@ export async function discoverLlmsTxt(
   // Helper to check timeout
   const isTimedOut = () => Date.now() - startTime > timeoutMs
   
-  // Helper to report progress
-  const reportProgress = (currentUrl: string, strategy: string, status: DiscoveryProgress['status'] = 'scanning') => {
+  // Helper to report progress with phase
+  const reportProgress = (
+    currentUrl: string, 
+    strategy: string, 
+    status: DiscoveryProgress['status'] = 'scanning',
+    phase?: string
+  ) => {
     if (onProgress) {
       onProgress({
         currentUrl,
@@ -925,14 +1425,19 @@ export async function discoverLlmsTxt(
         totalToScan: Math.max(scannedUrls.length + 10, allDiscoveredUrls.length),
         status,
         currentStrategy: strategy,
+        phase,
       })
     }
   }
   
   try {
-    // Phase 1: Quick check well-known paths first (highest chance of success)
+    // ========================================================================
+    // PHASE 1: Quick Checks (highest chance of immediate success)
+    // ========================================================================
+    
+    // Strategy: Well-known paths
     if (strategies.includes('wellknown') && !isTimedOut()) {
-      reportProgress('Checking well-known paths...', 'wellknown')
+      reportProgress('Checking well-known paths...', 'wellknown', 'scanning', 'Phase 1: Quick Checks')
       const result = await checkWellKnownPaths(inputUrl)
       if (result.found && result.url) {
         scannedUrls.push(result.url)
@@ -950,45 +1455,94 @@ export async function discoverLlmsTxt(
       }
     }
     
-    // Phase 2: Gather URLs from all strategies in parallel
-    reportProgress('Gathering potential documentation URLs...', 'discovery')
+    // ========================================================================
+    // PHASE 2: Parallel Discovery (gather ALL potential URLs)
+    // ========================================================================
+    reportProgress('Gathering potential documentation URLs...', 'discovery', 'scanning', 'Phase 2: Discovery')
     
     const discoveryPromises: Promise<DiscoveredUrl[]>[] = []
     
+    // Strategy: External doc platforms (high priority - GitBook, ReadMe, etc.)
+    if (strategies.includes('external')) {
+      discoveryPromises.push(
+        discoverExternalDocPlatforms(inputUrl).then(result => {
+          if (result.externalUrl) additionalInfo.externalDocsUrl = result.externalUrl
+          return result.urls
+        })
+      )
+    }
+    
+    // Strategy: Link text analysis (finds explicit "Docs" links)
+    if (strategies.includes('linktext')) {
+      discoveryPromises.push(analyzeLinksWithText(inputUrl))
+    }
+    
+    // Strategy: URL pattern generation
     if (strategies.includes('patterns')) {
       discoveryPromises.push(Promise.resolve(generateUrlPatterns(inputUrl)))
     }
     
-    if (strategies.includes('robots')) {
-      discoveryPromises.push(parseRobotsTxt(inputUrl).then(urls => {
-        if (urls.length > 0) additionalInfo.robotsTxtFound = true
-        return urls
-      }))
+    // Strategy: Documentation platform detection
+    if (strategies.includes('platform')) {
+      discoveryPromises.push(
+        detectDocPlatform(inputUrl).then(result => {
+          if (result.platform) additionalInfo.platform = result.platform
+          return result.urls
+        })
+      )
     }
     
+    // Strategy: API documentation framework detection
+    if (strategies.includes('apiframework')) {
+      discoveryPromises.push(
+        detectApiDocFramework(inputUrl).then(result => {
+          if (result.framework) additionalInfo.detectedFramework = result.framework
+          return result.urls
+        })
+      )
+    }
+    
+    // Strategy: Homepage link scraping
     if (strategies.includes('homepage')) {
       discoveryPromises.push(scrapeHomepageLinks(inputUrl))
     }
     
-    if (strategies.includes('platform')) {
-      discoveryPromises.push(detectDocPlatform(inputUrl).then(result => {
-        if (result.platform) additionalInfo.platform = result.platform
-        return result.urls
-      }))
+    // Strategy: Footer link analysis
+    if (strategies.includes('footer')) {
+      discoveryPromises.push(analyzeFooterLinks(inputUrl))
     }
     
+    // Strategy: JSON-LD structured data
+    if (strategies.includes('jsonld')) {
+      discoveryPromises.push(analyzeStructuredData(inputUrl))
+    }
+    
+    // Strategy: robots.txt parsing
+    if (strategies.includes('robots')) {
+      discoveryPromises.push(
+        parseRobotsTxt(inputUrl).then(urls => {
+          if (urls.length > 0) additionalInfo.robotsTxtFound = true
+          return urls
+        })
+      )
+    }
+    
+    // Strategy: GitHub/GitLab repository
     if (strategies.includes('github')) {
-      discoveryPromises.push(checkGitRepository(inputUrl).then(result => {
-        if (result.repoUrl) additionalInfo.githubRepo = result.repoUrl
-        return result.urls
-      }))
+      discoveryPromises.push(
+        checkGitRepository(inputUrl).then(result => {
+          if (result.repoUrl) additionalInfo.githubRepo = result.repoUrl
+          return result.urls
+        })
+      )
     }
     
+    // Strategy: OpenAPI/Swagger endpoints
     if (strategies.includes('openapi')) {
       discoveryPromises.push(checkOpenApiEndpoints(inputUrl))
     }
     
-    // Wait for all discovery strategies
+    // Wait for all discovery strategies to complete
     const discoveryResults = await Promise.allSettled(discoveryPromises)
     
     for (const result of discoveryResults) {
@@ -997,8 +1551,12 @@ export async function discoverLlmsTxt(
       }
     }
     
-    // Phase 3: Parse sitemaps found in robots.txt
+    // ========================================================================
+    // PHASE 3: Sitemap Deep Analysis
+    // ========================================================================
     if (strategies.includes('sitemap') && !isTimedOut()) {
+      reportProgress('Analyzing sitemaps...', 'sitemap', 'scanning', 'Phase 3: Sitemap Analysis')
+      
       const sitemapUrls = allDiscoveredUrls
         .filter(u => u.source === 'robots-sitemap')
         .map(u => u.url)
@@ -1009,10 +1567,11 @@ export async function discoverLlmsTxt(
         sitemapUrls.push(
           `${parsed.protocol}//${parsed.hostname}/sitemap.xml`,
           `${parsed.protocol}//${parsed.fullDomain}/sitemap.xml`,
+          `${parsed.protocol}//${parsed.hostname}/sitemap_index.xml`,
         )
       }
       
-      for (const sitemapUrl of Array.from(new Set(sitemapUrls)).slice(0, 3)) {
+      for (const sitemapUrl of Array.from(new Set(sitemapUrls)).slice(0, 5)) {
         if (isTimedOut()) break
         const sitemapDiscovered = await parseSitemap(sitemapUrl)
         if (sitemapDiscovered.length > 0) {
@@ -1021,6 +1580,11 @@ export async function discoverLlmsTxt(
         }
       }
     }
+    
+    // ========================================================================
+    // PHASE 4: Deduplicate, Prioritize, and Check
+    // ========================================================================
+    reportProgress('Prioritizing discovered URLs...', 'prioritize', 'scanning', 'Phase 4: Checking')
     
     // Deduplicate and sort by priority
     const seen = new Set<string>()
@@ -1034,9 +1598,9 @@ export async function discoverLlmsTxt(
       .sort((a, b) => a.priority - b.priority)
       .slice(0, CONFIG.maxUrlsToScan)
     
-    // Phase 4: Check all discovered URLs for llms.txt
-    reportProgress(`Checking ${uniqueUrls.length} potential locations...`, 'checking')
+    reportProgress(`Checking ${uniqueUrls.length} potential locations...`, 'checking', 'scanning', 'Phase 4: Checking')
     
+    // Check all discovered URLs for llms.txt in priority order
     for (let i = 0; i < uniqueUrls.length; i += CONFIG.batchSize) {
       if (isTimedOut()) break
       
@@ -1058,6 +1622,26 @@ export async function discoverLlmsTxt(
           
           reportProgress(checkResult.url!, source, 'found')
           
+          // Determine confidence based on discovery method
+          let confidence: 'high' | 'medium' | 'low' = 'medium'
+          if (
+            source.includes('user-provided') || 
+            source.includes('well-known') ||
+            source.includes('nav-text') ||
+            source.includes('external-')
+          ) {
+            confidence = 'high'
+          } else if (
+            source.includes('platform') || 
+            source.includes('github') ||
+            source.includes('link-text') ||
+            source.includes('api-framework')
+          ) {
+            confidence = 'high'
+          } else if (source.includes('footer') || source.includes('sitemap')) {
+            confidence = 'medium'
+          }
+          
           return {
             found: true,
             url,
@@ -1066,15 +1650,16 @@ export async function discoverLlmsTxt(
             scannedUrls,
             timeElapsed: Date.now() - startTime,
             discoveryMethod: source,
-            confidence: source.includes('user-provided') || source.includes('well-known') ? 'high' : 
-                       source.includes('platform') || source.includes('github') ? 'high' : 'medium',
+            confidence,
             additionalInfo,
           }
         }
       }
     }
     
-    // Not found
+    // ========================================================================
+    // Not Found
+    // ========================================================================
     reportProgress('', 'complete', 'not-found')
     
     return {

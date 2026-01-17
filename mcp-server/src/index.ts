@@ -13,7 +13,7 @@ import {
   McpError
 } from '@modelcontextprotocol/sdk/types.js'
 
-import { extractDocumentation, fetchLlmsTxt } from './extractor.js'
+import { extractDocumentation, fetchLlmsTxt, verifyLlmsTxt, discoverDocumentationUrls } from './extractor.js'
 import type { ExtractionResult, Document } from './types.js'
 
 // Store extracted documentation in memory for resource access
@@ -120,6 +120,34 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             url: {
               type: 'string',
               description: 'The URL that was previously extracted'
+            }
+          },
+          required: ['url']
+        }
+      },
+      {
+        name: 'verify_llms_txt',
+        description: 'Check if a website has a valid llms.txt or llms-full.txt file. Returns availability status, file location, and basic metadata.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            url: {
+              type: 'string',
+              description: 'The URL of the website to verify (e.g., docs.anthropic.com, stripe.com)'
+            }
+          },
+          required: ['url']
+        }
+      },
+      {
+        name: 'discover_documentation_urls',
+        description: 'Discover possible llms.txt locations for a given domain. Checks root domain, docs subdomain, and common paths.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            url: {
+              type: 'string',
+              description: 'The base URL or domain to check'
             }
           },
           required: ['url']
@@ -320,6 +348,44 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               type: 'text',
               text: cached.agentGuide.content
+            }
+          ]
+        }
+      }
+
+      case 'verify_llms_txt': {
+        const url = args?.url as string
+        
+        if (!url) {
+          throw new McpError(ErrorCode.InvalidParams, 'URL is required')
+        }
+
+        const verifyResult = await verifyLlmsTxt(url)
+        
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(verifyResult, null, 2)
+            }
+          ]
+        }
+      }
+
+      case 'discover_documentation_urls': {
+        const url = args?.url as string
+        
+        if (!url) {
+          throw new McpError(ErrorCode.InvalidParams, 'URL is required')
+        }
+
+        const discoverResult = await discoverDocumentationUrls(url)
+        
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(discoverResult, null, 2)
             }
           ]
         }
