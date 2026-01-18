@@ -216,6 +216,45 @@ export default function OutputSection({ result, onReset }: OutputSectionProps) {
             </a>
           </div>
         </div>
+        
+        {/* Linked Sources Info - show when docs were fetched from multiple llms.txt files */}
+        {result.linkedSources && result.linkedSources.length > 0 && (
+          <div className="mt-4 p-3 md:p-4 bg-white/5 rounded-xl border border-neutral-700">
+            <div className="flex items-center gap-2 mb-2">
+              <Files className="w-4 h-4 text-white" />
+              <span className="text-sm font-medium text-white">
+                Content from {result.linkedSources.length + 1} documentation sources
+              </span>
+            </div>
+            <div className="text-xs text-neutral-400 mb-3">
+              This site uses multiple llms.txt files. All content has been merged for you.
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href={result.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/10 rounded-lg text-xs text-neutral-300 hover:bg-white/20 transition-colors"
+              >
+                <span className="truncate max-w-[120px]">Main</span>
+                <ExternalLink className="w-3 h-3 flex-shrink-0" />
+              </a>
+              {result.linkedSources.map((source, i) => (
+                <a
+                  key={i}
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/10 rounded-lg text-xs text-neutral-300 hover:bg-white/20 transition-colors"
+                  title={source.description || source.name}
+                >
+                  <span className="truncate max-w-[120px]">{source.name}</span>
+                  <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tabs */}

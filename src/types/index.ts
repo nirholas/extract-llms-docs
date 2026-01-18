@@ -3,6 +3,7 @@ export interface Document {
   title: string
   content: string
   tokens: number
+  sourceUrl?: string  // For documents extracted from linked llms.txt files
 }
 
 export interface MarkdownDocument {
@@ -24,6 +25,14 @@ export interface ExtractionProgress {
   logs: string[]
 }
 
+export interface LinkedSource {
+  url: string
+  name: string
+  description?: string
+  documentCount?: number
+  tokens?: number
+}
+
 export interface ExtractionResult {
   url: string
   sourceUrl: string
@@ -31,10 +40,12 @@ export interface ExtractionResult {
   documents: Document[]
   fullDocument: Document
   agentGuide: Document
+  linkedSources?: LinkedSource[]  // Info about linked llms.txt files that were fetched
   stats: {
     totalTokens: number
     documentCount: number
     processingTime: number
+    linkedSourceCount?: number
   }
 }
 
