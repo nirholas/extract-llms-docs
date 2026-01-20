@@ -1,1 +1,9 @@
-{"$schema":"https://registry.modelcontextprotocol.io/schema/server.json","name":"extract-llms-docs","title":"Documentation Extractor","description":"Extract llms.txt from any docs site - Mintlify Docusaurus GitBook ReadMe parser","repository":"https://github.com/nirholas/extract-llms-docs","keywords":["documentation","llms-txt","extractor"],"packages":[{"registry_name":"source","identifier":"https://github.com/nirholas/extract-llms-docs"}]}
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.nirholas/extract-llms-docs",
+  "title": "Documentation Extractor",
+  "description": "Extract llms.txt from any docs site - Mintlify Docusaurus GitBook parser",
+  "keywords": ["documentation", "llms-txt", "extractor", "mintlify", "docusaurus"],
+  "repository": {"url": "https://github.com/nirholas/extract-llms-docs", "source": "github"},
+  "packages": [{"registryType": "source", "identifier": "https://github.com/nirholas/extract-llms-docs"}]
+}
