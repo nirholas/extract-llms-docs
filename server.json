@@ -4,6 +4,5 @@
   "title": "Documentation Extractor",
   "description": "Extract llms.txt from any docs site - Mintlify Docusaurus GitBook parser",
   "keywords": ["documentation", "llms-txt", "extractor", "mintlify", "docusaurus"],
-  "repository": {"url": "https://github.com/nirholas/extract-llms-docs", "source": "github"},
-  "packages": [{"registryType": "source", "identifier": "https://github.com/nirholas/extract-llms-docs", "transport": {"type": "stdio"}}]
+  "repository": {"url": "https://github.com/nirholas/extract-llms-docs", "source": "github"}
 }
