@@ -1,6 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.nirholas/extract-llms-docs",
+  "version": "1.0.0",
   "title": "Documentation Extractor",
   "description": "Extract llms.txt from any docs site - Mintlify Docusaurus GitBook parser",
   "keywords": ["documentation", "llms-txt", "extractor", "mintlify", "docusaurus"],
