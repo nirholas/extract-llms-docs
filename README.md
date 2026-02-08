@@ -1,6 +1,6 @@
 # llm.energy
  
-<p align="center">
+<p align="center"> 
   <img src="public/docs/assets/images/banner.png" alt="llm.energy - Extract Documentation for AI Agents" width="600" />
 </p>
 
