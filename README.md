@@ -616,3 +616,76 @@ ERC 8004, ERC_8004, ERC.8004, EIP 8004, EIP_8004, EIP.8004, erc-8004, erc8004, e
 </details>
 
 
+---
+
+## 🌐 Live HTTP Deployment
+
+**Extract LLMs Docs** is deployed and accessible over HTTP via [MCP Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http) transport — no local installation required.
+
+**Endpoint:**
+```
+https://modelcontextprotocol.name/mcp/extract-llms-docs
+```
+
+### Connect from any MCP Client
+
+Add to your MCP client configuration (Claude Desktop, Cursor, SperaxOS, etc.):
+
+```json
+{
+  "mcpServers": {
+    "extract-llms-docs": {
+      "type": "http",
+      "url": "https://modelcontextprotocol.name/mcp/extract-llms-docs"
+    }
+  }
+}
+```
+
+### Available Tools (5)
+
+| Tool | Description |
+|------|-------------|
+| `fetch_llms_txt` | Fetch llms.txt from a domain |
+| `fetch_llms_full_txt` | Fetch full llms.txt |
+| `extract_documentation` | Extract documentation from URL |
+| `verify_llms_txt` | Verify llms.txt support |
+| `discover_documentation_urls` | Discover doc URLs |
+
+### Example Requests
+
+**Fetch llms.txt from a domain:**
+```bash
+curl -X POST https://modelcontextprotocol.name/mcp/extract-llms-docs \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"fetch_llms_txt","arguments":{"url":"https://docs.anthropic.com"}}}'
+```
+
+**Fetch full llms.txt:**
+```bash
+curl -X POST https://modelcontextprotocol.name/mcp/extract-llms-docs \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"fetch_llms_full_txt","arguments":{"url":"https://docs.anthropic.com"}}}'
+```
+
+**Extract documentation from URL:**
+```bash
+curl -X POST https://modelcontextprotocol.name/mcp/extract-llms-docs \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"extract_documentation","arguments":{"url":"https://docs.anthropic.com/en/docs","max_length":5000}}}'
+```
+
+### List All Tools
+
+```bash
+curl -X POST https://modelcontextprotocol.name/mcp/extract-llms-docs \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+```
+
+### Also Available On
+
+- **[SperaxOS](https://speraxos.vercel.app)** — Browse and install from the [MCP marketplace](https://speraxos.vercel.app/community/mcp)
+- **All 27 MCP servers** — See the full catalog at [modelcontextprotocol.name](https://modelcontextprotocol.name)
+
+> Powered by [modelcontextprotocol.name](https://modelcontextprotocol.name) — the open MCP HTTP gateway
