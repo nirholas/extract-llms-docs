@@ -1,0 +1,15 @@
+{
+    "name": "extract-llms-docs",
+    "description": "Extract documentation for AI agents from any site with llms.txt support. Features MCP server, REST API, batch processing, and multiple export formats.",
+    "version": "1.0.0",
+    "publisher": "nirholas",
+    "repository": "https://github.com/nirholas/extract-llms-docs",
+    "language": "TypeScript",
+    "topics": [
+        "llms",
+        "extract",
+        "nirholas",
+        "open-source",
+        "docs"
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "schema_version": "v1",
+    "name_for_human": "extract-llms-docs",
+    "name_for_model": "extract_llms_docs",
+    "description_for_human": "Extract documentation for AI agents from any site with llms.txt support. Features MCP server, REST API, batch processing, and multiple export formats.",
+    "description_for_model": "Extract documentation for AI agents from any site with llms.txt support. Features MCP server, REST API, batch processing, and multiple export formats.",
+    "auth": {
+        "type": "none"
+    },
+    "api": {
+        "type": "none"
+    },
+    "logo_url": "https://github.com/nirholas.png",
+    "contact_email": "nirholas@users.noreply.github.com",
+    "legal_info_url": "https://github.com/nirholas/extract-llms-docs/blob/main/LICENSE"
+}

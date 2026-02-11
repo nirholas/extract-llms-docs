@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use extract-llms-docs, please cite it as below."
+type: software
+title: "extract-llms-docs"
+abstract: "Extract documentation for AI agents from any site with llms.txt support. Features MCP server, REST API, batch processing, and multiple export formats."
+authors:
+  - alias: nirholas
+    name: nirholas
+repository-code: "https://github.com/nirholas/extract-llms-docs"
+url: "https://github.com/nirholas/extract-llms-docs"
+license: MIT
+version: "1.0.0"
+date-released: "2026-02-11"
+keywords:
+  - open-source
+  - nirholas

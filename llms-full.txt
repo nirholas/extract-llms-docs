@@ -1,0 +1,18 @@
+# extract-llms-docs
+
+> Extract documentation for AI agents from any site with llms.txt support. Features MCP server, REST API, batch processing, and multiple export formats.
+
+## Overview
+
+extract-llms-docs is an open-source project by nirholas. Extract documentation for AI agents from any site with llms.txt support. Features MCP server, REST API, batch processing, and multiple export formats.
+
+## Repository
+
+- URL: https://github.com/nirholas/extract-llms-docs
+- Language: TypeScript
+- License: MIT
+- Author: nirholas
+
+## Contributing
+
+Contributions are welcome. See CONTRIBUTING.md for guidelines.
