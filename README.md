@@ -8,7 +8,7 @@
   <strong>Extract llms.txt documentation and install.md instructions from any website for AI agents, LLMs, and automation workflows.</strong>
 </p>
 <p align="center">
-  <a href="https://llm.energy">https://llm.energy</a>
+  <a href="https://llm.energy">llm.energy</a>
 </p>
 <p align="center">
   <a href="llms-full-txt.vercel.app">llms-full-txt.vercel.app</a>
