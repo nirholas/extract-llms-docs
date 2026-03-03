@@ -7,11 +7,12 @@
 <p align="center">
   <strong>Extract llms.txt documentation and install.md instructions from any website for AI agents, LLMs, and automation workflows.</strong>
 </p>
-
+<p align="center">
+  <a href="https://llm.energy">https://llm.energy</a>
+</p>
 <p align="center">
   <a href="llms-full-txt.vercel.app">llms-full-txt.vercel.app</a>
 </p>
-llms-full-txt.vercel.app
 
 <p align="center">
   <a href="https://llm.energy"><img src="https://img.shields.io/badge/🌐_Website-llm.energy-black?style=for-the-badge" alt="Website" /></a>
