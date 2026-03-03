@@ -9,6 +9,11 @@
 </p>
 
 <p align="center">
+  <a href="llms-full-txt.vercel.app">llms-full-txt.vercel.app</a>
+</p>
+llms-full-txt.vercel.app
+
+<p align="center">
   <a href="https://llm.energy"><img src="https://img.shields.io/badge/🌐_Website-llm.energy-black?style=for-the-badge" alt="Website" /></a>
   <a href="https://llm.energy/docs/"><img src="https://img.shields.io/badge/📚_Docs-Read_Docs-black?style=for-the-badge" alt="Documentation" /></a>
   <a href="https://www.npmjs.com/package/@llm-energy/mcp-server"><img src="https://img.shields.io/npm/v/@llm-energy/mcp-server?style=for-the-badge&logo=npm&label=MCP%20Server" alt="npm version" /></a>
