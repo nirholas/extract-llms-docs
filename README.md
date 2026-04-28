@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/nirholas-extract-llms-docs-badge.png)](https://mseep.ai/app/nirholas-extract-llms-docs)
+
 # llm.energy
  
 <p align="center"> 
