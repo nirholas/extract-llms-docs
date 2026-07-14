@@ -626,7 +626,6 @@ ERC 8004, ERC_8004, ERC.8004, EIP 8004, EIP_8004, EIP.8004, erc-8004, erc8004, e
 *Last Updated: January 29, 2026*
 </details>
 
-
 ---
 
 ## 🌐 Live HTTP Deployment

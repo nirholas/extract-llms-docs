@@ -1,4 +1,5 @@
 {
+  "license": "SEE LICENSE IN LICENSE",
   "name": "llms-forge",
   "version": "1.0.0",
   "description": "llm.energy - Extract documentation for AI agents from any site with llms.txt support",
