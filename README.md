@@ -9,14 +9,9 @@
 </p>
 <p align="center">
   <a href="https://llm.energy">llm.energy</a>
-    <a href="https://llm.energy">llm.energy</a>
-      <a href="https://llm.energy">llm.energy</a>
-        <a href="https://llm.energy">llm.energy</a>
-          <a href="https://llm.energy">llm.energy</a>
-
 </p>
 <p align="center">
-  <a href="llms-full-txt.vercel.app">llms-full-txt.vercel.app</a>
+  <a href="https://llms-full-txt.vercel.app">llms-full-txt.vercel.app</a>
 </p>
 
 <p align="center">
@@ -28,7 +23,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
+  <img src="https://img.shields.io/badge/License-Proprietary-lightgrey" alt="Proprietary License" />
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen" alt="PRs Welcome" />
 </p>
 
@@ -321,14 +316,20 @@ extract-llms-docs/
 
 ## ⚙️ Configuration
 
-Environment variables (optional):
+All environment variables are optional — the app runs without them. Copy `.env.example` to
+`.env.local` and fill in only what you need:
 
 ```bash
-RATE_LIMIT_REQUESTS=100     # Max requests per window
-RATE_LIMIT_WINDOW_MS=60000  # Window duration in ms
-CACHE_TTL=3600              # Cache time-to-live in seconds
-ADMIN_KEY=your-secret-key   # Admin API key (required for cache management)
+cp .env.example .env.local
 ```
+
+| Variable | Used by | Default | Purpose |
+|----------|---------|---------|---------|
+| `ADMIN_KEY` | `/api/cache` | _unset_ | Value the `x-admin-key` header must match for cache management. Set this in any deployment — the prune endpoint otherwise falls back to a well-known default. |
+| `ANTHROPIC_API_KEY` | `/api/generate-install` | _unset_ | Enables Claude-backed generation of `install.md`. The endpoint returns a configuration error without it. |
+| `VERIFY_TIMEOUT_MS` | `/api/sites/verify` | `10000` | Per-site fetch timeout, in milliseconds. |
+| `VERIFY_CACHE_TTL_MS` | `/api/sites/verify` | `300000` | How long verification results are cached, in milliseconds. |
+| `HEALTH_TIMEOUT_MS` | `/api/sites/health` | `8000` | Timeout for site health probes, in milliseconds. |
 
 ---
 
@@ -387,7 +388,7 @@ Contributions are welcome! Please follow these steps:
 
 ## 📄 License
 
-**MIT License** - see [LICENSE](LICENSE) for details
+Proprietary — Copyright 2026 nirholas, all rights reserved. See [LICENSE](LICENSE) for details.
 
 ---
 
