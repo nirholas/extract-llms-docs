@@ -704,3 +704,10 @@ curl -X POST https://modelcontextprotocol.name/mcp/extract-llms-docs \
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=nirholas/extract-llms-docs&type=Date)](https://star-history.com/#nirholas/extract-llms-docs&Date)
+
+## Documentation
+
+Full documentation site: **https://nirholas.github.io/extract-llms-docs/**
+
+- [Getting started](docs/getting-started.md) covers install and first run.
+- [Examples](docs/examples.md) has copy-paste snippets.
