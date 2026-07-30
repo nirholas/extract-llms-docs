@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "llm.energy - Extract documentation for AI agents from any site with llms.txt support",
   "private": false,
-  "homepage": "https://llm.energy",
+  "homepage": "https://llm-energy-lp642k3kpa-uc.a.run.app",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nirholas/extract-llms-docs.git"

@@ -3,7 +3,7 @@
 How llm.energy works.
 
 !!! tip "Quick Start"
-    Visit [llm.energy](https://llm.energy) and enter any documentation URL to get started immediately!
+    Visit [llm.energy](https://llm-energy-lp642k3kpa-uc.a.run.app) and enter any documentation URL to get started immediately!
 
 ---
 

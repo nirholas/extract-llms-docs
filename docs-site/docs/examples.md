@@ -3,7 +3,7 @@
 Real-world examples of using llm.energy.
 
 !!! tip "Try It Live"
-    All examples can be tested at [llm.energy](https://llm.energy) - just enter the URL!
+    All examples can be tested at [llm.energy](https://llm-energy-lp642k3kpa-uc.a.run.app) - just enter the URL!
 
 ---
 
@@ -11,7 +11,7 @@ Real-world examples of using llm.energy.
 
 ```bash
 # Web App
-https://llm.energy
+https://llm-energy-lp642k3kpa-uc.a.run.app
 
 # Enter URL
 docs.anthropic.com

@@ -8,7 +8,7 @@ llm.energy is a free, open-source tool that fetches documentation from websites 
 
 ## Quick Start
 
-1. Visit [llm.energy](https://llm.energy)
+1. Visit [llm.energy](https://llm-energy-lp642k3kpa-uc.a.run.app)
 2. Paste any documentation URL
 3. Click Extract
 4. Download organized markdown files
@@ -66,8 +66,8 @@ Returns: ZIP file blob
 
 ## Links
 
-- Website: https://llm.energy
-- Documentation: https://llm.energy/docs
+- Website: https://llm-energy-lp642k3kpa-uc.a.run.app
+- Documentation: https://llm-energy-lp642k3kpa-uc.a.run.app/docs
 - GitHub: https://github.com/nirholas/lyra-tool-discovery
 - Author: https://x.com/nichxbt
 

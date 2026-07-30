@@ -2,7 +2,7 @@
 
 Extract documentation for AI agents. Fetch llms.txt and install.md from any documentation site, organized into downloadable markdown ready for Claude, ChatGPT, and other AI assistants.
 
-[:octicons-rocket-24: Get Started](https://llm.energy){ .md-button .md-button--primary }
+[:octicons-rocket-24: Get Started](https://llm-energy-lp642k3kpa-uc.a.run.app){ .md-button .md-button--primary }
 [:octicons-mark-github-16: View on GitHub](https://github.com/nirholas/extract-llms-docs){ .md-button }
 
 ---
@@ -55,7 +55,7 @@ Extract documentation for AI agents. Fetch llms.txt and install.md from any docu
 
 === "Web App"
 
-    1. Visit [llm.energy](https://llm.energy)
+    1. Visit [llm.energy](https://llm-energy-lp642k3kpa-uc.a.run.app)
     2. Enter a documentation URL
     3. Download the extracted files
 
@@ -79,7 +79,7 @@ Extract documentation for AI agents. Fetch llms.txt and install.md from any docu
 === "API"
 
     ```bash
-    curl -X POST https://llm.energy/api/extract \
+    curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/extract \
       -H "Content-Type: application/json" \
       -d '{"url": "docs.anthropic.com"}'
     ```

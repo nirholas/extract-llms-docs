@@ -18,7 +18,7 @@ llm.energy fetches documentation from websites that support the llms.txt standar
 
 ### Web App
 
-1. Visit https://llm.energy
+1. Visit https://llm-energy-lp642k3kpa-uc.a.run.app
 2. Enter a documentation URL
 3. Download the extracted files
 
@@ -65,7 +65,7 @@ List all cached documents.
 
 ## API Reference
 
-Base URL: https://llm.energy/api
+Base URL: https://llm-energy-lp642k3kpa-uc.a.run.app/api
 
 ### POST /extract
 
@@ -97,9 +97,9 @@ pnpm dev
 
 ## Links
 
-- Website: https://llm.energy
+- Website: https://llm-energy-lp642k3kpa-uc.a.run.app
 - GitHub: https://github.com/nirholas/lyra-tool-discovery
-- Documentation: https://llm.energy/docs
+- Documentation: https://llm-energy-lp642k3kpa-uc.a.run.app/docs
 - llms.txt Standard: https://llmstxt.org
 - Author: https://x.com/nichxbt
 

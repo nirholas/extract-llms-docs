@@ -10,7 +10,7 @@ REST API for llm.energy.
 ## Base URL
 
 ```
-https://llm.energy/api
+https://llm-energy-lp642k3kpa-uc.a.run.app/api
 ```
 
 ---
