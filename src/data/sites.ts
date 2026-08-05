@@ -49,6 +49,17 @@ export type CategoryId = typeof CATEGORIES[number]['id']
 
 export const KNOWN_SITES: SiteEntry[] = [
   {
+    id: 'answerlens',
+    name: 'AnswerLens',
+    url: 'https://app.sfdj.net',
+    llmsTxtUrl: 'https://app.sfdj.net',
+    category: 'other',
+    description: 'Public evidence layer audits for B2B SaaS websites',
+    llmsTxtType: 'standard',
+    verified: true,
+    lastChecked: '2026-07-04',
+  },
+  {
     id: 'anthropic',
     name: 'Anthropic',
     url: 'https://docs.anthropic.com',
