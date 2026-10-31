@@ -1,4 +1,4 @@
-import yaml from 'js-yaml'
+import * as yaml from 'js-yaml'
 import type { ExtractionResult, ExportData } from '@/types'
 import { extractionToExportData } from './markdown'
 
