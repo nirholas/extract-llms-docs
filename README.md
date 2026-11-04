@@ -8,15 +8,12 @@
   <strong>Extract llms.txt documentation and install.md instructions from any website for AI agents, LLMs, and automation workflows.</strong>
 </p>
 <p align="center">
-  <a href="https://llm-energy-lp642k3kpa-uc.a.run.app">llm.energy</a>
-</p>
-<p align="center">
-  <a href="https://llms-full-txt.vercel.app">llms-full-txt.vercel.app</a>
+  <a href="https://llm.energy">llm.energy</a>
 </p>
 
 <p align="center">
-  <a href="https://llm-energy-lp642k3kpa-uc.a.run.app"><img src="https://img.shields.io/badge/🌐_Website-llm.energy-black?style=for-the-badge" alt="Website" /></a>
-  <a href="https://llm-energy-lp642k3kpa-uc.a.run.app/docs/"><img src="https://img.shields.io/badge/📚_Docs-Read_Docs-black?style=for-the-badge" alt="Documentation" /></a>
+  <a href="https://llm.energy"><img src="https://img.shields.io/badge/🌐_Website-llm.energy-black?style=for-the-badge" alt="Website" /></a>
+  <a href="https://docs.llm.energy/"><img src="https://img.shields.io/badge/📚_Docs-Read_Docs-black?style=for-the-badge" alt="Documentation" /></a>
   <a href="https://www.npmjs.com/package/@llm-energy/mcp-server"><img src="https://img.shields.io/npm/v/@llm-energy/mcp-server?style=for-the-badge&logo=npm&label=MCP%20Server" alt="npm version" /></a>
 </p>
 
@@ -91,18 +88,18 @@ Generate LLM-executable installation instructions from any source:
 
 ```bash
 # Generate install.md for any GitHub project
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/generate-install \
+curl -X POST https://llm.energy/api/generate-install \
   -H "Content-Type: application/json" \
   -d '{"url": "https://github.com/anthropics/anthropic-sdk-python", "type": "github"}'
 ```
 
-Visit **[llm.energy/install-generator](https://llm-energy-lp642k3kpa-uc.a.run.app/install-generator)** to use the web interface.
+Visit **[llm.energy/install-generator](https://llm.energy/install-generator)** to use the web interface.
 
 ---
 
 ## 📚 Documentation
 
-Full documentation is available at **[llm.energy/docs](https://llm-energy-lp642k3kpa-uc.a.run.app/docs/)**
+Full documentation is available at **[llm.energy/docs](https://docs.llm.energy/)**
 
 ---
 
@@ -110,7 +107,7 @@ Full documentation is available at **[llm.energy/docs](https://llm-energy-lp642k
 
 ### Web Application
 
-Visit [llm.energy](https://llm-energy-lp642k3kpa-uc.a.run.app) to use the hosted version.
+Visit [llm.energy](https://llm.energy) to use the hosted version.
 
 ### Local Development
 
@@ -146,7 +143,7 @@ Add to your MCP client configuration (Claude Desktop, Cursor, etc.):
 }
 ```
 
-See [MCP Server Documentation](https://llm-energy-lp642k3kpa-uc.a.run.app/docs/mcp-server/installation/) for detailed setup.
+See [MCP Server Documentation](https://docs.llm.energy/mcp-server/installation/) for detailed setup.
 
 </details>
 
@@ -158,7 +155,7 @@ See [MCP Server Documentation](https://llm-energy-lp642k3kpa-uc.a.run.app/docs/m
 <summary><strong>POST /api/extract</strong> - Extract documentation from a URL</summary>
 
 ```bash
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/extract \
+curl -X POST https://llm.energy/api/extract \
   -H "Content-Type: application/json" \
   -d '{"url": "docs.anthropic.com"}'
 ```
@@ -171,7 +168,7 @@ Response includes parsed sections, metadata, and download URLs.
 <summary><strong>POST /api/validate</strong> - Check if URL has llms.txt support</summary>
 
 ```bash
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/validate \
+curl -X POST https://llm.energy/api/validate \
   -H "Content-Type: application/json" \
   -d '{"url": "docs.example.com"}'
 ```
@@ -182,7 +179,7 @@ curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/validate \
 <summary><strong>POST /api/batch</strong> - Process multiple URLs</summary>
 
 ```bash
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/batch \
+curl -X POST https://llm.energy/api/batch \
   -H "Content-Type: application/json" \
   -d '{"urls": ["docs.anthropic.com", "docs.stripe.com"]}'
 ```
@@ -194,7 +191,7 @@ curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/batch \
 
 ```bash
 # Formats: markdown, json, yaml, zip
-curl "https://llm-energy-lp642k3kpa-uc.a.run.app/api/download?url=docs.anthropic.com&format=zip"
+curl "https://llm.energy/api/download?url=docs.anthropic.com&format=zip"
 ```
 
 </details>
@@ -204,22 +201,22 @@ curl "https://llm-energy-lp642k3kpa-uc.a.run.app/api/download?url=docs.anthropic
 
 ```bash
 # Generate from a GitHub repository
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/generate-install \
+curl -X POST https://llm.energy/api/generate-install \
   -H "Content-Type: application/json" \
   -d '{"url": "https://github.com/anthropics/anthropic-sdk-python", "type": "github"}'
 
 # Generate from a documentation URL
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/generate-install \
+curl -X POST https://llm.energy/api/generate-install \
   -H "Content-Type: application/json" \
   -d '{"url": "https://docs.anthropic.com/en/docs/quickstart", "type": "docs"}'
 
 # Analyze only (preview mode)
-curl "https://llm-energy-lp642k3kpa-uc.a.run.app/api/generate-install?url=https://github.com/anthropics/anthropic-sdk-python&type=github"
+curl "https://llm.energy/api/generate-install?url=https://github.com/anthropics/anthropic-sdk-python&type=github"
 ```
 
 </details>
 
-📖 **[Full API Reference →](https://llm-energy-lp642k3kpa-uc.a.run.app/docs/api-reference/)**
+📖 **[Full API Reference →](https://docs.llm.energy/api-reference/)**
 
 ---
 
@@ -325,11 +322,22 @@ cp .env.example .env.local
 
 | Variable | Used by | Default | Purpose |
 |----------|---------|---------|---------|
-| `ADMIN_KEY` | `/api/cache` | _unset_ | Value the `x-admin-key` header must match for cache management. Set this in any deployment — the prune endpoint otherwise falls back to a well-known default. |
+| `ADMIN_KEY` | `/api/cache` | _unset_ | Value the `x-admin-key` header must match for cache management. Both `GET` and `POST` return `500` when it is unset. Production reads it from Secret Manager (`llm-energy-admin-key`). |
 | `ANTHROPIC_API_KEY` | `/api/generate-install` | _unset_ | Enables Claude-backed generation of `install.md`. The endpoint returns a configuration error without it. |
 | `VERIFY_TIMEOUT_MS` | `/api/sites/verify` | `10000` | Per-site fetch timeout, in milliseconds. |
 | `VERIFY_CACHE_TTL_MS` | `/api/sites/verify` | `300000` | How long verification results are cached, in milliseconds. |
 | `HEALTH_TIMEOUT_MS` | `/api/sites/health` | `8000` | Timeout for site health probes, in milliseconds. |
+
+---
+
+## 🚀 Deployment
+
+| Hostname | Serves | Hosted on |
+|----------|--------|-----------|
+| [llm.energy](https://llm.energy), `www.llm.energy` | The Next.js app and its `/api/*` routes | Cloud Run service `llm-energy`, fronted by the Cloudflare Worker `llm-energy-proxy` |
+| [docs.llm.energy](https://docs.llm.energy) | MkDocs site built from [`docs-site/`](docs-site/) | Cloudflare Pages project `llm-energy` |
+
+Redeploy commands, DNS layout and rollback: [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md).
 
 ---
 
@@ -360,7 +368,7 @@ pnpm lint         # 🔍 ESLint check
 
 ## 🌐 Sites with llms.txt Support
 
-Browse **19+ curated websites** with verified llms.txt support at [llm.energy/directory](https://llm-energy-lp642k3kpa-uc.a.run.app/directory)
+Browse **19+ curated websites** with verified llms.txt support at [llm.energy/directory](https://llm.energy/directory)
 
 Featured sites include:
 - 🤖 Anthropic Documentation
@@ -395,8 +403,8 @@ Proprietary — Copyright 2026 nirholas, all rights reserved. See [LICENSE](LICE
 ## 🔗 Links
 
 <p align="center">
-  <a href="https://llm-energy-lp642k3kpa-uc.a.run.app">🌐 Website</a> •
-  <a href="https://llm-energy-lp642k3kpa-uc.a.run.app/docs">📚 Documentation</a> •
+  <a href="https://llm.energy">🌐 Website</a> •
+  <a href="https://docs.llm.energy">📚 Documentation</a> •
   <a href="https://github.com/nirholas/extract-llms-docs">💻 GitHub</a> •
   <a href="https://www.npmjs.com/package/@llm-energy/mcp-server">📦 NPM</a>
 </p>
@@ -696,7 +704,7 @@ curl -X POST https://modelcontextprotocol.name/mcp/extract-llms-docs \
 
 ### Also Available On
 
-- **[SperaxOS](https://speraxos.vercel.app)** — Browse and install from the [MCP marketplace](https://speraxos.vercel.app/community/mcp)
+- **[SperaxOS](https://chat.sperax.io)** — Browse and install from the [MCP marketplace](https://chat.sperax.io/community/mcp)
 - **All 27 MCP servers** — See the full catalog at [modelcontextprotocol.name](https://modelcontextprotocol.name)
 
 > Powered by [modelcontextprotocol.name](https://modelcontextprotocol.name) — the open MCP HTTP gateway
@@ -707,7 +715,7 @@ curl -X POST https://modelcontextprotocol.name/mcp/extract-llms-docs \
 
 ## Documentation
 
-Full documentation site: **https://nirholas.github.io/extract-llms-docs/**
+Full documentation site: **https://docs.llm.energy/**
 
 - [Getting started](docs/getting-started.md) covers install and first run.
 - [Examples](docs/examples.md) has copy-paste snippets.

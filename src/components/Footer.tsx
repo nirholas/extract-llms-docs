@@ -13,7 +13,7 @@ const FOOTER_LINKS = {
     { href: '/install-generator', label: 'install.md Generator', icon: Terminal },
   ],
   resources: [
-    { href: '/docs/', label: 'Documentation', icon: BookOpen },
+    { href: 'https://docs.llm.energy/', label: 'Documentation', icon: BookOpen },
     { href: '/#how-it-works', label: 'How it works' },
     { href: '/#features', label: 'Features' },
     { href: 'https://llmstxt.org', label: 'llms.txt Standard', external: true },

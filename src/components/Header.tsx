@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { href: '/batch', label: 'Batch', icon: Layers },
   { href: '/generator', label: 'llms.txt', icon: FileEdit },
   { href: '/install-generator', label: 'install.md', icon: Terminal },
-  { href: '/docs/', label: 'Docs', icon: BookOpen },
+  { href: 'https://docs.llm.energy/', label: 'Docs', icon: BookOpen },
   { href: '/#how-it-works', label: 'How it works' },
   { href: '/#features', label: 'Features' },
 ]

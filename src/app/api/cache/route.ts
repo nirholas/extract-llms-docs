@@ -70,7 +70,15 @@ export async function DELETE(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   const adminKey = request.headers.get('x-admin-key')
-  const expectedKey = process.env.ADMIN_KEY || 'llms-forge-admin'
+  const expectedKey = process.env.ADMIN_KEY
+
+  if (!expectedKey) {
+    console.error('ADMIN_KEY environment variable is not set')
+    return NextResponse.json(
+      { error: 'Server configuration error' },
+      { status: 500 }
+    )
+  }
 
   if (adminKey !== expectedKey) {
     return NextResponse.json(

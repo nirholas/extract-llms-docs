@@ -21,7 +21,7 @@ llm.energy - Extract documentation for AI agents from any site with llms.txt sup
 
 ```bash
 # Generate install.md for any GitHub project
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/generate-install \
+curl -X POST https://llm.energy/api/generate-install \
   -H "Content-Type: application/json" \
   -d '{"url": "https://github.com/anthropics/anthropic-sdk-python", "type": "github"}'
 ```
@@ -43,7 +43,7 @@ pnpm dev
 ## Example 4
 
 ```bash
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/extract \
+curl -X POST https://llm.energy/api/extract \
   -H "Content-Type: application/json" \
   -d '{"url": "docs.anthropic.com"}'
 ```
@@ -51,7 +51,7 @@ curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/extract \
 ## Example 5
 
 ```bash
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/validate \
+curl -X POST https://llm.energy/api/validate \
   -H "Content-Type: application/json" \
   -d '{"url": "docs.example.com"}'
 ```
@@ -59,7 +59,7 @@ curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/validate \
 ## Example 6
 
 ```bash
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/batch \
+curl -X POST https://llm.energy/api/batch \
   -H "Content-Type: application/json" \
   -d '{"urls": ["docs.anthropic.com", "docs.stripe.com"]}'
 ```
@@ -68,24 +68,24 @@ curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/batch \
 
 ```bash
 # Formats: markdown, json, yaml, zip
-curl "https://llm-energy-lp642k3kpa-uc.a.run.app/api/download?url=docs.anthropic.com&format=zip"
+curl "https://llm.energy/api/download?url=docs.anthropic.com&format=zip"
 ```
 
 ## Example 8
 
 ```bash
 # Generate from a GitHub repository
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/generate-install \
+curl -X POST https://llm.energy/api/generate-install \
   -H "Content-Type: application/json" \
   -d '{"url": "https://github.com/anthropics/anthropic-sdk-python", "type": "github"}'
 
 # Generate from a documentation URL
-curl -X POST https://llm-energy-lp642k3kpa-uc.a.run.app/api/generate-install \
+curl -X POST https://llm.energy/api/generate-install \
   -H "Content-Type: application/json" \
   -d '{"url": "https://docs.anthropic.com/en/docs/quickstart", "type": "docs"}'
 
 # Analyze only (preview mode)
-curl "https://llm-energy-lp642k3kpa-uc.a.run.app/api/generate-install?url=https://github.com/anthropics/anthropic-sdk-python&type=github"
+curl "https://llm.energy/api/generate-install?url=https://github.com/anthropics/anthropic-sdk-python&type=github"
 ```
 
 

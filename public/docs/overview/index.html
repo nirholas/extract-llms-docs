@@ -12,7 +12,7 @@
         <meta name="author" content="nich">
       
       
-        <link rel="canonical" href="https://llm.energy/docs/overview/">
+        <link rel="canonical" href="https://docs.llm.energy/overview/">
       
       
         <link rel="prev" href="..">
@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/favicon.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -33,10 +33,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1143,6 +1143,10 @@
 
 <h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
 <p>How llm.energy works.</p>
+<div class="admonition tip">
+<p class="admonition-title">Quick Start</p>
+<p>Visit <a href="https://llm.energy">llm.energy</a> and enter any documentation URL to get started immediately!</p>
+</div>
 <hr />
 <h2 id="supported-standards">Supported Standards<a class="headerlink" href="#supported-standards" title="Permanent link">&para;</a></h2>
 <p>llm.energy supports two complementary standards for LLM-friendly documentation:</p>
@@ -1202,13 +1206,16 @@
     D --&gt; E[Generate Files]
     E --&gt; F[Download]</code></pre>
 <h3 id="1-fetch">1. Fetch<a class="headerlink" href="#1-fetch" title="Permanent link">&para;</a></h3>
-<p>llm.energy fetches:</p>
+<div class="admonition example">
+<p class="admonition-title">Fetch Strategy</p>
+<p>llm.energy intelligently searches multiple locations:</p>
 <ol>
 <li><code>{url}/llms-full.txt</code> (complete documentation)</li>
 <li>Falls back to <code>{url}/llms.txt</code> if full version unavailable</li>
 <li><code>{url}/install.md</code> (installation instructions)</li>
 <li>Also checks <code>/docs/install.md</code> and <code>docs.{domain}/install.md</code></li>
 </ol>
+</div>
 <h3 id="2-parse">2. Parse<a class="headerlink" href="#2-parse" title="Permanent link">&para;</a></h3>
 <p>Content is split into sections based on markdown headers:</p>
 <ul>
@@ -1216,6 +1223,10 @@
 <li>Each section becomes its own <code>.md</code> file</li>
 <li>Filenames are generated from section titles</li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Smart Parsing</p>
+<p>The parser preserves code blocks, tables, and formatting while intelligently splitting content.</p>
+</div>
 <h3 id="3-generate">3. Generate<a class="headerlink" href="#3-generate" title="Permanent link">&para;</a></h3>
 <p>Four types of output:</p>
 <table>
@@ -1244,6 +1255,10 @@
 </tr>
 </tbody>
 </table>
+<div class="admonition success">
+<p class="admonition-title">Ready for AI</p>
+<p>All output files are optimized for AI consumption with clear structure and metadata.</p>
+</div>
 <hr />
 <h2 id="supported-sites">Supported Sites<a class="headerlink" href="#supported-sites" title="Permanent link">&para;</a></h2>
 <p>Any site that provides <code>/llms.txt</code> or <code>/llms-full.txt</code> will work:</p>
@@ -1330,10 +1345,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>
