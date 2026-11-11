@@ -1,0 +1,1 @@
+{"name":"llms-docs-extractor","version":"1.0.0","description":"Verify, discover and extract llms.txt documentation from any site through the llm.energy MCP server.","author":{"name":"nirholas"},"repository":"https://github.com/nirholas/extract-llms-docs","homepage":"https://llm.energy","keywords":["llms-txt","documentation","mcp","agents"]}
