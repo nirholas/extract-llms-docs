@@ -48,8 +48,8 @@ Returns: ZIP file blob
 {
   "mcpServers": {
     "llm-energy": {
-      "command": "npx",
-      "args": ["-y", "@llm-energy/mcp-server"]
+      "command": "node",
+      "args": ["/absolute/path/to/extract-llms-docs/mcp-server/dist/index.js"]
     }
   }
 }

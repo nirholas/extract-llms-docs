@@ -14,7 +14,7 @@
 <p align="center">
   <a href="https://llm.energy"><img src="https://img.shields.io/badge/🌐_Website-llm.energy-black?style=for-the-badge" alt="Website" /></a>
   <a href="https://docs.llm.energy/"><img src="https://img.shields.io/badge/📚_Docs-Read_Docs-black?style=for-the-badge" alt="Documentation" /></a>
-  <a href="https://www.npmjs.com/package/@llm-energy/mcp-server"><img src="https://img.shields.io/npm/v/@llm-energy/mcp-server?style=for-the-badge&logo=npm&label=MCP%20Server" alt="npm version" /></a>
+  <a href="https://github.com/nirholas/extract-llms-docs/tree/main/mcp-server"><img src="https://img.shields.io/badge/MCP_Server-run_from_source-black?style=for-the-badge&logo=modelcontextprotocol" alt="MCP server, run from source" /></a>
 </p>
 
 <p align="center">
@@ -130,14 +130,23 @@ pnpm dev
 <details>
 <summary>📦 <strong>Click to expand MCP Server setup</strong></summary>
 
-Add to your MCP client configuration (Claude Desktop, Cursor, etc.):
+The MCP server is not published to npm yet. Build it from this repository, then point your MCP client at the built file (Claude Desktop, Cursor, etc.):
+
+```bash
+git clone https://github.com/nirholas/extract-llms-docs.git
+cd extract-llms-docs/mcp-server
+npm install
+npm run build
+```
+
+Then add (use the real absolute path to your clone):
 
 ```json
 {
   "mcpServers": {
     "llm-energy": {
-      "command": "npx",
-      "args": ["-y", "@llm-energy/mcp-server"]
+      "command": "node",
+      "args": ["/absolute/path/to/extract-llms-docs/mcp-server/dist/index.js"]
     }
   }
 }
@@ -406,7 +415,7 @@ Proprietary — Copyright 2026 nirholas, all rights reserved. See [LICENSE](LICE
   <a href="https://llm.energy">🌐 Website</a> •
   <a href="https://docs.llm.energy">📚 Documentation</a> •
   <a href="https://github.com/nirholas/extract-llms-docs">💻 GitHub</a> •
-  <a href="https://www.npmjs.com/package/@llm-energy/mcp-server">📦 NPM</a>
+  <a href="https://github.com/nirholas/extract-llms-docs/tree/main/mcp-server">📦 MCP Server</a>
 </p>
 
 ---

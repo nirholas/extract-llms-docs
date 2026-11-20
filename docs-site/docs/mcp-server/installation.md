@@ -12,16 +12,25 @@ The [Model Context Protocol](https://modelcontextprotocol.io) (MCP) allows AI as
 
 ## Quick Setup
 
-=== "npx (Recommended)"
+=== "Build from source (Recommended)"
 
-    No installation required:
+    The server is not published to npm yet. Build it from the repository:
+
+    ```bash
+    git clone https://github.com/nirholas/extract-llms-docs.git
+    cd extract-llms-docs/mcp-server
+    npm install
+    npm run build
+    ```
+
+    Then point your client at the built file (use your real absolute path):
 
     ```json
     {
       "mcpServers": {
         "llm-energy": {
-          "command": "npx",
-          "args": ["-y", "@llm-energy/mcp-server"]
+          "command": "node",
+          "args": ["/absolute/path/to/extract-llms-docs/mcp-server/dist/index.js"]
         }
       }
     }
@@ -29,8 +38,10 @@ The [Model Context Protocol](https://modelcontextprotocol.io) (MCP) allows AI as
 
 === "Global Install"
 
+    From the `mcp-server` directory of your clone, after building:
+
     ```bash
-    npm install -g @llm-energy/mcp-server
+    npm install -g .
     ```
 
     ```json
@@ -63,8 +74,8 @@ The [Model Context Protocol](https://modelcontextprotocol.io) (MCP) allows AI as
     ```json
     {
       "llm-energy": {
-        "command": "npx",
-        "args": ["-y", "@llm-energy/mcp-server"]
+        "command": "node",
+        "args": ["/absolute/path/to/extract-llms-docs/mcp-server/dist/index.js"]
       }
     }
     ```

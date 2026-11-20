@@ -67,8 +67,8 @@ Extract documentation for AI agents. Fetch llms.txt and install.md from any docu
     {
       "mcpServers": {
         "llm-energy": {
-          "command": "npx",
-          "args": ["-y", "@llm-energy/mcp-server"]
+          "command": "node",
+          "args": ["/absolute/path/to/extract-llms-docs/mcp-server/dist/index.js"]
         }
       }
     }

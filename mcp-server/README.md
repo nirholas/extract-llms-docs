@@ -14,14 +14,19 @@ An MCP (Model Context Protocol) server that extracts documentation from websites
 
 ## Installation
 
+This package is not published to npm yet. Build it from the repository:
+
 ```bash
-npm install @llm-energy/mcp-server
+git clone https://github.com/nirholas/extract-llms-docs.git
+cd extract-llms-docs/mcp-server
+npm install
+npm run build
 ```
 
-Or install globally:
+Optionally install the `llm-energy-mcp` command globally from the local checkout:
 
 ```bash
-npm install -g @llm-energy/mcp-server
+npm install -g .
 ```
 
 ## Usage with Claude Desktop
@@ -35,14 +40,14 @@ Windows: %APPDATA%\Claude\claude_desktop_config.json
 {
   "mcpServers": {
     "llm-energy": {
-      "command": "npx",
-      "args": ["-y", "@llm-energy/mcp-server"]
+      "command": "node",
+      "args": ["/absolute/path/to/extract-llms-docs/mcp-server/dist/index.js"]
     }
   }
 }
 ```
 
-Or if installed globally:
+Or, if installed globally with `npm install -g .`:
 
 ```json
 {
